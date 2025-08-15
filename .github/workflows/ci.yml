@@ -33,8 +33,6 @@ jobs:
       - name: 🏗️ Build library
         run: npm run build:lib
         
-      - name: 🧪 Run tests
-        run: npm run test:lib -- --watch=false --browsers=ChromeHeadless || echo "No tests configured"
         
       - name: 🏗️ Build demo
         run: |

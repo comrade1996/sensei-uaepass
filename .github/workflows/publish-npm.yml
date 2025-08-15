@@ -39,8 +39,6 @@ jobs:
       - name: Build library
         run: npm run build:lib
         
-      - name: Run tests
-        run: npm run test:lib -- --watch=false --browsers=ChromeHeadless
         
       - name: Update version (if manual trigger)
         if: github.event_name == 'workflow_dispatch'

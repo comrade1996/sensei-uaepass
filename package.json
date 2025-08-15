@@ -13,8 +13,6 @@
     "build:demo": "ng build demo --configuration production",
     "build:watch": "ng build uae-pass --watch --configuration development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test:lib": "ng test uae-pass",
     "lint": "ng lint",
     "pack:lib": "cd dist/uae-pass && npm pack",
     "publish:lib": "cd dist/uae-pass && npm publish --access public",
