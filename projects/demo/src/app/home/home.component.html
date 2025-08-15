@@ -1,0 +1,218 @@
+<div class="app-container">
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="hero-content">
+      <div class="logo-container">
+        <div class="sensei-logo">🥋</div>
+        <h1 class="app-title">
+          <span class="sensei-text">Sensei</span>
+          <span class="uaepass-text">UAE Pass</span>
+        </h1>
+      </div>
+      <p class="app-subtitle">Master of UAE Pass integration</p>
+      <div class="version-badge">v1.0.0</div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Auth Status Card -->
+    <section class="auth-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span class="status-icon">🔐</span>
+          Authentication Status
+        </h2>
+      </div>
+
+      <div class="status-display">
+        <div class="status-item">
+          <span class="status-label">Status:</span>
+          <span class="status-value status-{{ status() }}">{{ status() }}</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Authenticated:</span>
+          <span
+            class="auth-indicator {{
+              isAuthenticated() ? 'authenticated' : 'not-authenticated'
+            }}"
+          >
+            {{ isAuthenticated() ? "✅ Yes" : "❌ No" }}
+          </span>
+        </div>
+      </div>
+
+      @if (error()) {
+      <div class="error-alert">
+        <span class="error-icon">⚠️</span>
+        <div class="error-content">
+          <strong>Authentication Error</strong>
+          <p>{{ error() }}</p>
+        </div>
+      </div>
+      }
+
+      <div class="action-buttons">
+        @if (!isAuthenticated()) {
+        <div class="login-section">
+          <uae-pass-login-button
+            (pressed)="onLoginPressed()"
+          >
+          </uae-pass-login-button>
+          @if (error()) {
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="clearError()"
+          >
+            🗑️ Clear Error
+          </button>
+          }
+        </div>
+        } @else {
+        <div class="logout-section">
+          <button type="button" class="btn btn-danger" (click)="logout()">
+            🚪 Logout from UAE Pass
+          </button>
+          <button
+            type="button"
+            class="btn btn-warning"
+            (click)="clearSession()"
+          >
+            🗑️ Clear Local Session
+          </button>
+        </div>
+        }
+      </div>
+    </section>
+
+    @if (isAuthenticated()) {
+    <!-- User Profile Card -->
+    <section class="profile-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span class="profile-icon">👤</span>
+          User Profile
+        </h2>
+      </div>
+
+      @if (profile()) {
+      <div class="profile-grid">
+        <div class="profile-item">
+          <span class="profile-label">Full Name (EN)</span>
+          <span class="profile-value">{{
+            profile()?.fullnameEN || "N/A"
+          }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Full Name (AR)</span>
+          <span class="profile-value arabic">{{
+            profile()?.fullnameAR || "N/A"
+          }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Email</span>
+          <span class="profile-value">{{ profile()?.email || "N/A" }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Mobile</span>
+          <span class="profile-value">{{ profile()?.mobile || "N/A" }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">User ID</span>
+          <span class="profile-value mono">{{ profile()?.sub || "N/A" }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">UUID</span>
+          <span class="profile-value mono">{{ profile()?.uuid || "N/A" }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Gender</span>
+          <span class="profile-value">{{ profile()?.gender || "N/A" }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">Nationality</span>
+          <span class="profile-value">{{
+            profile()?.nationalityEN || "N/A"
+          }}</span>
+        </div>
+        <div class="profile-item">
+          <span class="profile-label">User Type</span>
+          <span class="profile-value">{{ profile()?.userType || "N/A" }}</span>
+        </div>
+      </div>
+
+      <details class="json-details">
+        <summary class="json-summary">
+          <span class="json-icon">📄</span>
+          View Raw JSON Data
+        </summary>
+        <pre class="json-content">{{ formatJson(profile()) }}</pre>
+      </details>
+      } @else {
+      <div class="no-data">
+        <span class="no-data-icon">🚫</span>
+        <p>No profile data available</p>
+      </div>
+      }
+    </section>
+
+    <!-- Tokens Card -->
+    <section class="tokens-card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span class="tokens-icon">🔑</span>
+          Access Tokens
+        </h2>
+      </div>
+
+      @if (tokens()) {
+      <div class="tokens-grid">
+        <div class="token-item">
+          <span class="token-label">Access Token</span>
+          <span class="token-value mono"
+            >{{ tokens()?.access_token?.substring(0, 32) }}...</span
+          >
+        </div>
+        <div class="token-item">
+          <span class="token-label">Token Type</span>
+          <span class="token-value">{{ tokens()?.token_type }}</span>
+        </div>
+        <div class="token-item">
+          <span class="token-label">Expires In</span>
+          <span class="token-value">{{ tokens()?.expires_in }} seconds</span>
+        </div>
+        @if (tokens()?.refresh_token) {
+        <div class="token-item">
+          <span class="token-label">Refresh Token</span>
+          <span class="token-value mono"
+            >{{ tokens()?.refresh_token?.substring(0, 32) }}...</span
+          >
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="no-data">
+        <span class="no-data-icon">🚫</span>
+        <p>No token data available</p>
+      </div>
+      }
+    </section>
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p class="footer-text">
+        Built with <span class="heart">❤️</span> using
+        <strong>Sensei UAE Pass</strong> library
+      </p>
+      <div class="tech-stack">
+        <span class="tech-badge">Angular </span>
+        <span class="tech-badge">TypeScript</span>
+        <span class="tech-badge">Signals</span>
+        <span class="tech-badge">PKCE</span>
+      </div>
+    </div>
+  </footer>
+</div>
