@@ -29,20 +29,20 @@ Peer deps: `@angular/core`, `@angular/common`, `rxjs`. Ensure HttpClient is prov
 Add the provider to your application (e.g. `app.config.ts`).
 
 ```ts
-import { provideHttpClient, withFetch } from '@angular/common/http';
-import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from 'sensei-uaepass';
+import { provideHttpClient, withFetch } from "@angular/common/http";
+import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from "sensei-uaepass";
 
 export const appConfig = {
   providers: [
     provideHttpClient(withFetch()),
     provideUaePass({
-      clientId: '<CLIENT_ID>',
-      redirectUri: 'https://your.app/uae-pass/callback',
+      clientId: "<CLIENT_ID>",
+      redirectUri: "https://your.app/uae-pass/callback",
       isProduction: false,
       language: UaePassLanguageCode.En,
-      scope: 'urn:uae:digitalid:profile:general',
-      tokenProxyUrl: '/api/uae-pass/token', // recommended
-      userInfoProxyUrl: '/api/uae-pass/userinfo',
+      scope: "urn:uae:digitalid:profile:general",
+      tokenProxyUrl: "/api/uae-pass/token", // recommended
+      userInfoProxyUrl: "/api/uae-pass/userinfo",
       storage: UaePassStorageMode.Session,
     }),
   ],
@@ -52,24 +52,19 @@ export const appConfig = {
 ## Add routes
 
 ```ts
-import { Routes } from '@angular/router';
-import { UaePassCallbackComponent } from 'sensei-uaepass';
+import { Routes } from "@angular/router";
+import { UaePassCallbackComponent } from "sensei-uaepass";
 
 export const routes: Routes = [
   // ...
-  { path: 'uae-pass/callback', component: UaePassCallbackComponent },
+  { path: "uae-pass/callback", component: UaePassCallbackComponent },
 ];
 ```
 
 ## Use the login button
 
 ```html
-<uae-pass-login-button
-  [label]="'Sign in with UAE PASS'"
-  [busyLabel]="'Signing in…'"
-  [logoSrc]="'/assets/uae-pass.svg'"
-  (pressed)="onPressed()"
-></uae-pass-login-button>
+<uae-pass-login-button [label]="'Sign in with UAE PASS'" [busyLabel]="'Signing in…'" [logoSrc]="'/assets/uae-pass.svg'" (pressed)="onPressed()"></uae-pass-login-button>
 ```
 
 The button calls `redirectToAuthorization()` for you. Alternatively, inject `UaePassAuthService` and call it directly.
@@ -92,6 +87,7 @@ ngOnInit() { this.auth.handleRedirectCallback(); }
 ## Service API
 
 ### Signals (Reactive State)
+
 - `status(): Signal<UaePassAuthStatus>` - Current authentication status
 - `tokens(): Signal<UaePassTokens|null>` - Access and refresh tokens
 - `profile(): Signal<UaePassUserProfile|null>` - User profile information
@@ -99,6 +95,7 @@ ngOnInit() { this.auth.handleRedirectCallback(); }
 - `isAuthenticated(): Signal<boolean>` - Computed authentication state
 
 ### Methods
+
 - `redirectToAuthorization(): Promise<void>` - Redirect to UAE Pass login
 - `handleRedirectCallback(url?: string): Promise<void>` - Handle callback from UAE Pass
 - `logout(): void` - Logout and clear session
@@ -120,23 +117,24 @@ The proxy server is **highly recommended** for security reasons:
 You can replace the proxy server with any backend technology:
 
 #### Node.js/Express Example
+
 ```javascript
-app.post('/api/uae-pass/token', async (req, res) => {
+app.post("/api/uae-pass/token", async (req, res) => {
   const { code, redirect_uri, code_verifier } = req.body;
-  
+
   const params = new URLSearchParams({
-    grant_type: 'authorization_code',
-    client_id: 'your-client-id',
-    client_secret: 'your-client-secret',
+    grant_type: "authorization_code",
+    client_id: "your-client-id",
+    client_secret: "your-client-secret",
     code,
     redirect_uri,
-    code_verifier
+    code_verifier,
   });
 
-  const response = await fetch('https://stg-id.uaepass.ae/idshub/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString()
+  const response = await fetch("https://stg-id.uaepass.ae/idshub/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString(),
   });
 
   const data = await response.json();
@@ -145,6 +143,7 @@ app.post('/api/uae-pass/token', async (req, res) => {
 ```
 
 #### ASP.NET Core Example
+
 ```csharp
 [HttpPost("api/uae-pass/token")]
 public async Task<IActionResult> ExchangeToken([FromBody] TokenRequest request)
@@ -162,7 +161,7 @@ public async Task<IActionResult> ExchangeToken([FromBody] TokenRequest request)
     var content = new FormUrlEncodedContent(parameters);
     var response = await client.PostAsync("https://stg-id.uaepass.ae/idshub/token", content);
     var result = await response.Content.ReadAsStringAsync();
-    
+
     return Ok(JsonSerializer.Deserialize<object>(result));
 }
 ```
@@ -189,6 +188,7 @@ node proxy-server.js
 ```
 
 The demo shows:
+
 - UAE Pass login button with enum-based configuration
 - Real-time authentication status display
 - User profile and token information
@@ -197,6 +197,7 @@ The demo shows:
 ### Demo Configuration
 
 The demo uses staging environment with these settings:
+
 - `clientId: 'sandbox_stage'`
 - `redirectUri: 'http://localhost:4200/uae-pass/callback'`
 - `language: UaePassLanguageCode.En`
@@ -214,31 +215,8 @@ All commonly used string unions are exposed as enums for type safety:
 - `CodeChallengeMethod` — S256
 - `OAuthGrantType` — AuthorizationCode
 
-## Publishing
-
-The library is automatically published to npm via GitHub Actions:
-
-1. **Create a release tag**:
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
-
-2. **Or trigger manual publish**:
-   - Go to GitHub Actions
-   - Run "Publish Sensei UAE Pass" workflow
-   - Enter the version number
-
-The GitHub Action will:
-- Build the library
-- Run tests (if available)
-- Publish to NPM with provenance
-- Create GitHub release
-- Deploy documentation to GitHub Pages
-
 ## Resources
 
-- 📖 [Documentation](https://esamelzain.github.io/sensei-uaepass/)
 - 🔗 [NPM Package](https://www.npmjs.com/package/sensei-uaepass)
 - 📚 [Official UAE Pass Documentation](https://docs.uaepass.ae/)
 - 🚀 [UAE Pass Onboarding Guide](https://docs.uaepass.ae/getting-onboarded-with-uaepass)

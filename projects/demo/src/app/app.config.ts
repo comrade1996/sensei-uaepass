@@ -20,9 +20,9 @@ export const appConfig: ApplicationConfig = {
       redirectUri: 'http://localhost:4200/uae-pass/callback',
       logoutRedirectUri: 'http://localhost:4200/',
       isProduction: false,
-      language: UaePassLanguageCode.En,
-      storage: UaePassStorageMode.Local,
-      scope: 'urn:uae:digitalid:profile:full',
+      language: UaePassLanguageCode.Ar,
+      storage: UaePassStorageMode.Session,
+      scope: 'urn:uae:digitalid:profile:general',
       // Enable proxy URLs for CORS-safe token exchange and userinfo
       tokenProxyUrl: 'http://localhost:3001/api/uae-pass/token',
       userInfoProxyUrl: 'http://localhost:3001/api/uae-pass/userinfo',
