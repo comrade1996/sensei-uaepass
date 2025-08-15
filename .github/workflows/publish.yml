@@ -3,11 +3,11 @@ name: 🥋 Publish Sensei UAE Pass
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (e.g., 1.0.0)'
+        description: "Version to publish (e.g., 1.0.0)"
         required: true
         type: string
 
@@ -17,44 +17,44 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-          
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
       - name: 📦 Install dependencies
         run: npm ci
-        
+
       - name: 🔧 Update version (if manual trigger)
         if: github.event_name == 'workflow_dispatch'
         run: |
           cd projects/uae-pass
           npm version ${{ github.event.inputs.version }} --no-git-tag-version
-          
+
       - name: 🏗️ Build library
         run: npm run build:lib
-        
+
       - name: 🧪 Run tests (if available)
         run: npm run test:lib --if-present || echo "No tests configured"
-        
+
       - name: 📋 Verify build output
         run: |
           ls -la dist/uae-pass/
           cat dist/uae-pass/package.json
-          
+
       - name: 🚀 Publish to NPM
         run: |
           cd dist/uae-pass
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          
+
       - name: 🏷️ Create GitHub release (if tag push)
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         uses: actions/create-release@v1
@@ -65,21 +65,21 @@ jobs:
           release_name: 🥋 Sensei UAE Pass ${{ github.ref_name }}
           body: |
             ## 🥋 Sensei UAE Pass ${{ github.ref_name }}
-            
+
             Master-level UAE Pass integration for Angular!
-            
+
             ### Installation
             ```bash
             npm install sensei-uaepass@${{ github.ref_name }}
             ```
-            
+
             ### What's New
             - Check the [CHANGELOG.md](CHANGELOG.md) for detailed changes
-            
+
             ### Documentation
-            - 📖 [Documentation](https://esamelzain.github.io/sensei-uaepass/)
+            - 📖 [Documentation](https://comrade1996.github.io/sensei-uaepass/)
             - 🔗 [NPM Package](https://www.npmjs.com/package/sensei-uaepass)
-            
+
             ---
             *Built with sensei-level mastery* 🥋
           draft: false
@@ -89,11 +89,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: publish
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
       - name: 🛒 Checkout code
         uses: actions/checkout@v4
-        
+
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
