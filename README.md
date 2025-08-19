@@ -406,8 +406,10 @@ This project is licensed under the MIT License.
 
 For support, please open an issue on GitHub.
 
-## UAE Pass Resources
+## Resources
 
-- [Official UAE Pass Documentation](https://docs.uaepass.ae/)
-- [UAE Pass Onboarding Guide](https://docs.uaepass.ae/getting-onboarded-with-uaepass)
-- [UAE Pass Staging Environment](https://docs.uaepass.ae/quick-start-guide-uaepass-staging-environment)
+- 📖 [Complete Documentation](https://sensei-5.gitbook.io/sensei-uaepass/)
+- 🔗 [NPM Package](https://www.npmjs.com/package/sensei-uaepass)
+- 📚 [Official UAE Pass Documentation](https://docs.uaepass.ae/)
+- 🚀 [UAE Pass Onboarding Guide](https://docs.uaepass.ae/getting-onboarded-with-uaepass)
+- 🧪 [UAE Pass Staging Environment](https://docs.uaepass.ae/quick-start-guide-uaepass-staging-environment)

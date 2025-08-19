@@ -217,6 +217,7 @@ All commonly used string unions are exposed as enums for type safety:
 
 ## Resources
 
+- 📖 [Complete Documentation](https://sensei-5.gitbook.io/sensei-uaepass/)
 - 🔗 [NPM Package](https://www.npmjs.com/package/sensei-uaepass)
 - 📚 [Official UAE Pass Documentation](https://docs.uaepass.ae/)
 - 🚀 [UAE Pass Onboarding Guide](https://docs.uaepass.ae/getting-onboarded-with-uaepass)
