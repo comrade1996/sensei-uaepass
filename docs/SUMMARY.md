@@ -1,0 +1,24 @@
+# Summary
+
+- [Introduction](README.md)
+- Getting Started
+  - [Installation](getting-started/installation.md)
+  - [Quickstart](getting-started/quickstart.md)
+- Configuration
+  - [UAE Pass Config](configuration/uaepass-config.md)
+  - [Language & Logos](configuration/language-and-logos.md)
+  - [Storage Modes](configuration/storage.md)
+- Components
+  - [Login Button](components/login-button.md)
+  - [Callback Component](components/callback.md)
+- Services
+  - [Auth Service](services/auth-service.md)
+- Examples
+  - [Angular Demo](examples/angular-demo.md)
+  - [Node Proxy](examples/node-proxy.md)
+- Troubleshooting
+  - [FAQ](troubleshooting/faq.md)
+  - [Common Errors](troubleshooting/common-errors.md)
+- Deployment
+  - [Publishing to GitBook](deployment/publishing-to-gitbook.md)
+  - [Production Checklist](deployment/production-checklist.md)
