@@ -26,8 +26,8 @@
     "url": "https://github.com/comrade1996/sensei-uaepass/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^19.0.0",
-    "@angular/core": "^19.0.0",
+    "@angular/common": "^20.1.7",
+    "@angular/core": "^20.1.7",
     "rxjs": "^7.8.0"
   },
   "dependencies": {
