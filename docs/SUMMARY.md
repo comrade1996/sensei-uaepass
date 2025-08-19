@@ -16,6 +16,7 @@
 - Examples
   - [Angular Demo](examples/angular-demo.md)
   - [Node Proxy](examples/node-proxy.md)
+  - [ASP.NET Core Proxy](examples/dotnet-proxy.md)
 - Troubleshooting
   - [FAQ](troubleshooting/faq.md)
   - [Common Errors](troubleshooting/common-errors.md)

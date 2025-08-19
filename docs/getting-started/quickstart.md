@@ -39,4 +39,20 @@ export const routes: Routes = [
 <uae-pass-login-button></uae-pass-login-button>
 ```
 
+4) (Optional) Use the callback component explicitly
+
+```html
+<!-- If you want to render and handle events directly -->
+<uae-pass-callback (success)="onOk()" (failed)="onErr($event)"></uae-pass-callback>
+```
+
+The routed approach (step 2) is typically enough; the component auto-processes the URL and redirects back to `/` on success.
+
+5) Choose a backend proxy (Node or .NET)
+
+- Node: see Examples → [Node Proxy](../examples/node-proxy.md)
+- .NET (ASP.NET Core): see Examples → [ASP.NET Core Proxy](../examples/dotnet-proxy.md)
+
+Set `tokenProxyUrl` and `userInfoProxyUrl` in `provideUaePass({ ... })` to point at your backend endpoints.
+
 That’s it. On click, the button redirects to UAE PASS. The callback component completes the flow and restores tokens/profile.
