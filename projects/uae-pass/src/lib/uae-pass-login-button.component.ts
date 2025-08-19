@@ -114,11 +114,11 @@ export class UaePassLoginButtonComponent {
   // Default asset paths for UAE Pass button
   private readonly defaultAssetPaths = {
     english: 'assets/UAEPASS_Sign_with_Btn_Outline_Active@2x.svg',
-    arabic: 'assets/UAEPASS_Sign_with_Btn_Outline_Active_AR@2x.svg'
+    arabic: 'assets/UAEPASS_Sign_with_Btn_Outline_Active_AR@2x.svg',
   };
 
   // Inputs
-  language = input<'en' | 'ar'>('en');
+  language = input<'en' | 'ar'>();
   customImageSrc = input<string | null>(null);
   customStyles = input<string>('');
   isDisabled = input<boolean>(false);
@@ -136,20 +136,49 @@ export class UaePassLoginButtonComponent {
   });
 
   readonly imageSrc = computed(() => {
+    console.log('Input language:', this.language());
+    console.log('Config language:', this.config.language);
+    
     if (this.customImageSrc()) {
       return this.customImageSrc();
     }
+
+    // Use input language first, then config language, then default to 'en'
+    const configLang = this.config.language;
+    const inputLang = this.language();
     
-    const configLogos = this.config.buttonLogos;
-    if (configLogos) {
-      const lang = this.language() || this.config.language || 'en';
-      if (lang === 'ar' && configLogos.arabic) return configLogos.arabic;
-      if (lang === 'en' && configLogos.english) return configLogos.english;
+    // Handle the case where config.language might be 'ar' string or enum value
+    let normalizedConfigLang: 'en' | 'ar' = 'en';
+    if (configLang === 'ar' || configLang === 'Arabic' || String(configLang).toLowerCase() === 'ar') {
+      normalizedConfigLang = 'ar';
     }
     
+    const lang = inputLang || normalizedConfigLang;
+    
+    console.log('Final language used:', lang);
+    console.log('Config language raw:', configLang);
+    console.log('Normalized config language:', normalizedConfigLang);
+
+    const configLogos = this.config.buttonLogos;
+    if (configLogos) {
+      console.log('Config logos:', configLogos);
+      if (lang === 'ar' && configLogos.arabic) {
+        console.log('Using config Arabic logo:', configLogos.arabic);
+        return configLogos.arabic;
+      }
+      if (lang === 'en' && configLogos.english) {
+        console.log('Using config English logo:', configLogos.english);
+        return configLogos.english;
+      }
+    }
+
     // Fallback to default asset paths
-    const lang = this.language() || this.config.language || 'en';
-    return lang === 'ar' ? this.defaultAssetPaths.arabic : this.defaultAssetPaths.english;
+    const finalImage = lang === 'ar'
+      ? this.defaultAssetPaths.arabic
+      : this.defaultAssetPaths.english;
+    
+    console.log('Using default asset path:', finalImage);
+    return finalImage;
   });
 
   readonly disabled = computed(() => {
