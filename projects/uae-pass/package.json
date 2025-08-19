@@ -2,9 +2,21 @@
   "name": "sensei-uaepass",
   "version": "1.0.1",
   "description": "🥋 Master of UAE Pass integration! Angular OAuth 2.0 (PKCE) client with sensei-level signals-based state management, multi-language support, and elegant UI components.",
-  "keywords": ["uae-pass", "oauth2", "pkce", "angular", "signals", "sensei", "master", "authentication", "localization", "arabic", "rtl"],
+  "keywords": [
+    "uae-pass",
+    "oauth2",
+    "pkce",
+    "angular",
+    "signals",
+    "sensei",
+    "master",
+    "authentication",
+    "localization",
+    "arabic",
+    "rtl"
+  ],
   "license": "MIT",
-  "author": "Your Name <your.email@example.com>",
+  "author": "Comrade <omirgibreel7@gmail.com>",
   "homepage": "https://github.com/comrade1996/sensei-uaepass#readme",
   "repository": {
     "type": "git",
