@@ -1,15 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UaePassAuthService } from './uae-pass.oauth.service';
 import { UaePassAuthStatus, UaePassLanguageCode } from './uae-pass.enums';
-import { UAE_PASS_CONFIG, UaePassConfig } from './uae-pass.config';
+import { UAE_PASS_CONFIG } from './uae-pass.config';
+import { getUaePassTexts } from './uae-pass.i18n';
 
 @Component({
   selector: 'uae-pass-login-button',
@@ -25,11 +19,11 @@ import { UAE_PASS_CONFIG, UaePassConfig } from './uae-pass.config';
       class="uae-pass-login-btn"
       [disabled]="disabled()"
       (click)="handleLogin()"
-      [attr.aria-label]="'Sign in with UAE Pass'"
+      [attr.aria-label]="texts().signInWithUaePass"
     >
       <img
         [src]="imageSrc()"
-        alt="Sign with UAE PASS"
+        [alt]="texts().signInWithUaePass"
         class="uae-pass-btn-image"
         [class.loading]="disabled()"
         [style]="customStyles()"
@@ -94,8 +88,12 @@ import { UAE_PASS_CONFIG, UaePassConfig } from './uae-pass.config';
     }
 
     @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
     }
 
     /* Mobile responsiveness */
@@ -129,56 +127,25 @@ export class UaePassLoginButtonComponent {
   // Computed properties
   readonly isBusy = computed(() => {
     const s = this.auth.status();
-    return (
-      s === UaePassAuthStatus.Authorizing ||
-      s === UaePassAuthStatus.ExchangingToken
-    );
+    return s === UaePassAuthStatus.Authorizing || s === UaePassAuthStatus.ExchangingToken;
   });
 
+  readonly resolvedLanguage = computed<'en' | 'ar'>(() => {
+    return this.language() ?? this.config.language ?? UaePassLanguageCode.En;
+  });
+
+  readonly texts = computed(() => getUaePassTexts(this.resolvedLanguage()));
+
   readonly imageSrc = computed(() => {
-    console.log('Input language:', this.language());
-    console.log('Config language:', this.config.language);
-    
-    if (this.customImageSrc()) {
-      return this.customImageSrc();
-    }
+    const customImageSrc = this.customImageSrc();
+    if (customImageSrc) return customImageSrc;
 
-    // Use input language first, then config language, then default to 'en'
-    const configLang = this.config.language;
-    const inputLang = this.language();
-    
-    // Handle the case where config.language might be 'ar' string or enum value
-    let normalizedConfigLang: 'en' | 'ar' = 'en';
-    if (configLang === 'ar' || configLang === 'Arabic' || String(configLang).toLowerCase() === 'ar') {
-      normalizedConfigLang = 'ar';
-    }
-    
-    const lang = inputLang || normalizedConfigLang;
-    
-    console.log('Final language used:', lang);
-    console.log('Config language raw:', configLang);
-    console.log('Normalized config language:', normalizedConfigLang);
-
+    const lang = this.resolvedLanguage();
     const configLogos = this.config.buttonLogos;
-    if (configLogos) {
-      console.log('Config logos:', configLogos);
-      if (lang === 'ar' && configLogos.arabic) {
-        console.log('Using config Arabic logo:', configLogos.arabic);
-        return configLogos.arabic;
-      }
-      if (lang === 'en' && configLogos.english) {
-        console.log('Using config English logo:', configLogos.english);
-        return configLogos.english;
-      }
-    }
+    if (lang === 'ar' && configLogos?.arabic) return configLogos.arabic;
+    if (lang === 'en' && configLogos?.english) return configLogos.english;
 
-    // Fallback to default asset paths
-    const finalImage = lang === 'ar'
-      ? this.defaultAssetPaths.arabic
-      : this.defaultAssetPaths.english;
-    
-    console.log('Using default asset path:', finalImage);
-    return finalImage;
+    return lang === 'ar' ? this.defaultAssetPaths.arabic : this.defaultAssetPaths.english;
   });
 
   readonly disabled = computed(() => {

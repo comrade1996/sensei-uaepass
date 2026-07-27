@@ -11,13 +11,14 @@ npm run build:lib
 # 2) Start the demo app (opens http://localhost:4200)
 npm run start:demo
 
-# 3) (Recommended) Start the proxy in a second terminal
+# 3) Start the required proxy in a second terminal
 npm run start:proxy
 ```
 
 Ensure your `provideUaePass({...})` in the demo uses your Client ID and redirect URIs.
 
 Key scripts from `package.json`:
+
 - `build:lib` — builds the library
 - `start:demo` — serves the demo in production mode
 - `start:proxy` — runs `proxy-server.js`

@@ -1,4 +1,12 @@
-import { Component, inject, input, output, effect, computed, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  effect,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { UaePassAuthService } from './uae-pass.oauth.service';
 import { UaePassAuthStatus } from './uae-pass.enums';
 import { UAE_PASS_CONFIG } from './uae-pass.config';
@@ -25,9 +33,21 @@ import { getUaePassTexts } from './uae-pass.i18n';
       } @else if (status() === Status.Authenticated) {
         <div class="success-state">
           <div class="success-icon">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" fill="#10b981"/>
-              <path d="m9 12 2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="10" fill="#10b981" />
+              <path
+                d="m9 12 2 2 4-4"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <h2 class="status-title success">{{ texts().signedInSuccessfully }}</h2>
@@ -41,9 +61,21 @@ import { getUaePassTexts } from './uae-pass.i18n';
       } @else if (status() === Status.Error) {
         <div class="error-state">
           <div class="error-icon">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" fill="#ef4444"/>
-              <path d="m15 9-6 6m0-6 6 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="10" fill="#ef4444" />
+              <path
+                d="m15 9-6 6m0-6 6 6"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <h2 class="status-title error">{{ texts().error }}</h2>
@@ -66,7 +98,13 @@ import { getUaePassTexts } from './uae-pass.i18n';
       display: block;
       min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family:
+        'Inter',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
     }
 
     .callback-container {
@@ -106,8 +144,12 @@ import { getUaePassTexts } from './uae-pass.i18n';
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .status-title {
@@ -160,9 +202,15 @@ import { getUaePassTexts } from './uae-pass.i18n';
     }
 
     @keyframes progress {
-      0% { width: 0%; }
-      50% { width: 70%; }
-      100% { width: 100%; }
+      0% {
+        width: 0%;
+      }
+      50% {
+        width: 70%;
+      }
+      100% {
+        width: 100%;
+      }
     }
 
     .success-icon,
@@ -172,8 +220,12 @@ import { getUaePassTexts } from './uae-pass.i18n';
     }
 
     @keyframes scaleIn {
-      0% { transform: scale(0); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     .countdown-dots {
@@ -200,8 +252,13 @@ import { getUaePassTexts } from './uae-pass.i18n';
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 1;
+      }
     }
 
     .return-button {
@@ -228,13 +285,18 @@ import { getUaePassTexts } from './uae-pass.i18n';
     }
 
     /* RTL Support */
-    [dir="rtl"] .callback-container {
-      font-family: 'Noto Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    [dir='rtl'] .callback-container {
+      font-family:
+        'Noto Sans Arabic',
+        'Inter',
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
     }
 
-    [dir="rtl"] .status-title,
-    [dir="rtl"] .status-message,
-    [dir="rtl"] .error-message {
+    [dir='rtl'] .status-title,
+    [dir='rtl'] .status-message,
+    [dir='rtl'] .error-message {
       text-align: right;
     }
 

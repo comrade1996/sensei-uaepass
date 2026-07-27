@@ -1,45 +1,37 @@
-# 🥋 Sensei UAE Pass - Complete Setup & Deployment Guide
+# Sensei UAE PASS Setup Guide
 
-## 🎉 Project Status: Ready for Deployment!
+Use this guide for local development and integration setup. GitBook is the canonical consumer documentation; `DEPLOYMENT.md` covers maintainer releases.
 
-Your UAE Pass Angular library is now complete with all requested features:
+## Readiness Checklist
 
-### ✅ Completed Features
+### Repository
 
-- **Multi-language Support** - Full English/Arabic localization with RTL
-- **Language-Specific UI** - Dynamic button logos based on language
-- **Elegant Callback Component** - Beautiful loading animations and states
-- **GitHub Actions** - Automated NPM publishing and GitHub Pages deployment
-- **Complete Documentation** - Updated README, deployment guides, and setup instructions
+- [ ] Install Node.js `22.12.0` or newer.
+- [ ] Run `npm ci` and `npm run validate`.
+- [ ] Configure the `main` ruleset and required CI checks.
+- [ ] Enable private vulnerability reporting.
+- [ ] Connect GitBook to the `docs` directory.
 
-## 🚀 Deployment Checklist
+### Publishing
 
-### 1. GitHub Repository Setup
+- [ ] Create the GitHub `npm` environment.
+- [ ] Configure npm trusted publishing for `.github/workflows/publish.yml`.
+- [ ] Remove obsolete long-lived npm automation tokens.
+- [ ] Require two-factor authentication for npm maintainers.
 
-- [ ] Create GitHub repository
-- [ ] Update package.json with your repository URLs
-- [ ] Push code to GitHub
-- [ ] Configure NPM_TOKEN secret
-- [ ] Enable GitHub Pages
+### UAE PASS
 
-### 2. NPM Publishing
-
-- [ ] Create NPM account
-- [ ] Generate automation token
-- [ ] Configure GitHub secrets
-- [ ] Create version tag to trigger publishing
-
-### 3. Demo Deployment
-
-- [ ] GitHub Pages automatically deploys on push to main
-- [ ] Demo will be available at: `https://yourusername.github.io/uae-pass-angular/`
+- [ ] Register staging and production redirect URIs.
+- [ ] Keep the UAE PASS client secret only in the backend secret manager.
+- [ ] Deploy HTTPS token and user info proxy routes.
+- [ ] Restrict backend CORS to exact frontend origins.
 
 ## Prerequisites
 
-- Node.js 18+ and npm 8+
-- Angular CLI 19+
-- UAE Pass credentials (client ID and secret)
-- Git repository (GitHub recommended)
+- Node.js `22.12.0` or newer and npm.
+- UAE PASS application credentials.
+- An Angular 19.2 or 20 application for consumer integration.
+- A backend capable of securely holding the UAE PASS client secret.
 
 ## Quick Setup
 
@@ -48,7 +40,7 @@ Your UAE Pass Angular library is now complete with all requested features:
 ```bash
 git clone https://github.com/comrade1996/sensei-uaepass.git
 cd sensei-uaepass
-npm install
+npm ci
 ```
 
 ### 2. Build the Library
@@ -70,84 +62,35 @@ npm run start:proxy   # Backend proxy server
 
 ## GitHub Repository Setup
 
-### 1. Repository Settings
+Follow `GITHUB_SETUP.md` to configure repository metadata, topics, private vulnerability reporting, the `main` ruleset, and required CI checks.
 
-Go to your GitHub repository settings and configure:
-
-**Secrets and Variables → Actions:**
-
-- `NPM_TOKEN` - Your npm authentication token
-
-**Pages:**
-
-- Source: GitHub Actions
-- Custom domain (optional): `sensei-uaepass.dev`
-
-### 2. Branch Protection
-
-Protect your `main` branch:
-
-- Require pull request reviews
-- Require status checks to pass
-- Require branches to be up to date
-
-### 3. Repository Topics
-
-Add these topics for discoverability:
-
-- `uae-pass`
-- `oauth2`
-- `angular`
-- `typescript`
-- `pkce`
-- `authentication`
-- `sensei`
+Keep `https://sensei-5.gitbook.io/sensei-uaepass/` as the only canonical documentation site. Do not create a duplicate GitHub Pages documentation deployment.
 
 ## NPM Publishing Setup
 
-### 1. Create NPM Account
+The release pipeline uses npm trusted publishing with GitHub OIDC. It does not read an `NPM_TOKEN` secret.
 
-1. Sign up at [npmjs.com](https://www.npmjs.com)
-2. Verify your email address
-3. Enable 2FA (recommended)
+1. Enable two-factor authentication on each maintainer account.
+2. Create an `npm` environment in the GitHub repository.
+3. Configure the `sensei-uaepass` trusted publisher for repository `comrade1996/sensei-uaepass`, workflow `publish.yml`, and environment `npm`.
+4. Optionally require reviewers on the `npm` environment.
 
-### 2. Generate Access Token
+## Publishing a Release
 
-1. Go to Account → Access Tokens
-2. Generate New Token → Automation
-3. Copy the token
-
-### 3. Add Token to GitHub
-
-1. Go to repository Settings → Secrets and variables → Actions
-2. Add new secret: `NPM_TOKEN`
-3. Paste your npm token
-
-## Publishing Your First Release
-
-### Automatic Publishing (Recommended)
+Run all local checks before creating the release pull request:
 
 ```bash
-# Create and push a version tag
-git tag v1.0.0
-git push origin v1.0.0
+npm run validate
 ```
 
-The GitHub Action will automatically:
-
-- Build the library
-- Run tests
-- Publish to NPM
-- Create GitHub release
-- Deploy documentation
-
-### Manual Publishing
+After merging the version and changelog updates, create a matching annotated tag:
 
 ```bash
-# Build and publish manually
-npm run build:lib
-npm run publish:lib
+git tag -a v2.0.0 -m "Release v2.0.0"
+git push origin v2.0.0
 ```
+
+The release workflow reruns all gates, verifies the tag version, publishes with provenance, and creates the GitHub release. There is no manual or duplicate publishing workflow.
 
 ## Environment Configuration
 
@@ -217,32 +160,15 @@ Add these URIs to your UAE Pass application:
 
 ## Deployment Options
 
-### Frontend (Angular App)
+### Frontend
 
-**Netlify:**
+Build the demo or consuming Angular application with its production configuration:
 
 ```bash
-# Build command
 npm run build:demo
-
-# Publish directory
-dist/demo
 ```
 
-**Vercel:**
-
-```bash
-# Framework preset: Angular
-# Build command: npm run build:demo
-# Output directory: dist/demo
-```
-
-**GitHub Pages:**
-
-```bash
-# Automatically deployed via GitHub Actions
-# Available at: https://username.github.io/sensei-uaepass
-```
+Deploy the generated browser output to a static host or application platform. Configure the production `tokenProxyUrl` and `userInfoProxyUrl` before building. The repository does not include an automatic GitHub Pages deployment.
 
 ### Backend (Node.js)
 
@@ -276,8 +202,8 @@ Add error tracking to your backend:
 
 ```javascript
 // Sentry example
-const Sentry = require("@sentry/node");
-Sentry.init({ dsn: "your-sentry-dsn" });
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'your-sentry-dsn' });
 ```
 
 ### Analytics
@@ -286,9 +212,9 @@ Track authentication events:
 
 ```javascript
 // Google Analytics example
-gtag("event", "uae_pass_login", {
-  event_category: "authentication",
-  event_label: "success",
+gtag('event', 'uae_pass_login', {
+  event_category: 'authentication',
+  event_label: 'success',
 });
 ```
 
@@ -327,10 +253,9 @@ ng serve --configuration=development
 
 ## Support
 
-- 📖 [Documentation](https://comrade1996.github.io/sensei-uaepass/)
+- 📖 [Documentation](https://sensei-5.gitbook.io/sensei-uaepass/)
 - 🐛 [Issues](https://github.com/comrade1996/sensei-uaepass/issues)
-- 💬 [Discussions](https://github.com/comrade1996/sensei-uaepass/discussions)
-- 📧 Email: support@sensei-uaepass.dev
+- [Private security reports](https://github.com/comrade1996/sensei-uaepass/security/advisories/new)
 
 ## Contributing
 

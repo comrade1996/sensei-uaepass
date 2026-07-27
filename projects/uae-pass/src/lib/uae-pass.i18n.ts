@@ -1,18 +1,18 @@
 export interface UaePassTexts {
   // Login button
   signInWithUaePass: string;
-  
+
   // Callback component
   completingSignIn: string;
   signedInSuccessfully: string;
   redirectingToHomePage: string;
   error: string;
   returnToHome: string;
-  
+
   // Loading states
   loading: string;
   pleaseWait: string;
-  
+
   // Error messages
   windowNotAvailable: string;
   noUrlContext: string;
@@ -20,7 +20,7 @@ export interface UaePassTexts {
   tokenExchangeFailed: string;
   noUserProfile: string;
   userProfileFetchFailed: string;
-  
+
   // Common
   uaePass: string;
 }
@@ -40,7 +40,7 @@ export const UAE_PASS_TEXTS_EN: UaePassTexts = {
   tokenExchangeFailed: 'Failed to obtain access token',
   noUserProfile: 'No user profile data received',
   userProfileFetchFailed: 'Failed to fetch user profile',
-  uaePass: 'UAE PASS'
+  uaePass: 'UAE PASS',
 };
 
 export const UAE_PASS_TEXTS_AR: UaePassTexts = {
@@ -58,7 +58,7 @@ export const UAE_PASS_TEXTS_AR: UaePassTexts = {
   tokenExchangeFailed: 'فشل في الحصول على رمز الوصول',
   noUserProfile: 'لم يتم استلام بيانات الملف الشخصي للمستخدم',
   userProfileFetchFailed: 'فشل في جلب الملف الشخصي للمستخدم',
-  uaePass: 'هوية الإمارات الرقمية'
+  uaePass: 'هوية الإمارات الرقمية',
 };
 
 export function getUaePassTexts(language: 'en' | 'ar' = 'en'): UaePassTexts {

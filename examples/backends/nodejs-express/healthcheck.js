@@ -1,6 +1,6 @@
 /**
  * 🥋 Sensei UAE Pass - Docker Health Check
- * 
+ *
  * Simple health check script for Docker container monitoring
  */
 
@@ -11,7 +11,7 @@ const options = {
   port: process.env.PORT || 3001,
   path: '/health',
   method: 'GET',
-  timeout: 2000
+  timeout: 2000,
 };
 
 const healthCheck = http.request(options, (res) => {

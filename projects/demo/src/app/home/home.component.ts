@@ -6,24 +6,24 @@ import { UaePassAuthService, UaePassLoginButtonComponent, UaePassAuthStatus } fr
   standalone: true,
   imports: [UaePassLoginButtonComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
   private readonly auth = inject(UaePassAuthService) as UaePassAuthService;
-  
+
   readonly status = this.auth.status;
   readonly profile = this.auth.profile;
   readonly tokens = this.auth.tokens;
   readonly error = this.auth.error;
   readonly isAuthenticated = this.auth.isAuthenticated;
-  
+
   readonly AuthStatus = UaePassAuthStatus;
 
-  formatJson(obj: any): string {
+  formatJson(obj: unknown): string {
     if (!obj) return 'null';
     try {
       return JSON.stringify(obj, null, 2);
-    } catch (e) {
+    } catch {
       return String(obj);
     }
   }

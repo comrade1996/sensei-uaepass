@@ -1,15 +1,17 @@
-# 🥋 Sensei UAE Pass
+# Sensei UAE PASS: Angular Authentication Library
 
-Master of UAE Pass integration! Angular OAuth 2.0 (PKCE) client with sensei-level signals-based state management and standalone components.
+UAE PASS authentication for Angular 19 and 20 with OAuth 2.0 Authorization Code + PKCE, Signals, standalone components, Arabic/RTL support, and mandatory backend proxy endpoints.
 
-**Based on official UAE Pass documentation**: [https://docs.uaepass.ae/feature-guides/authentication/web-application](https://docs.uaepass.ae/feature-guides/authentication/web-application)
+[Documentation](https://sensei-5.gitbook.io/sensei-uaepass/) · [GitHub](https://github.com/comrade1996/sensei-uaepass) · [Issues](https://github.com/comrade1996/sensei-uaepass/issues)
+
+> This package is independently maintained and is not affiliated with or endorsed by UAE PASS. Validate production integrations against the [official documentation](https://docs.uaepass.ae/feature-guides/authentication/web-application).
 
 ## Features
 
 - 🔐 **OAuth 2.0 Integration** - Complete UAE Pass OAuth 2.0 flow support with PKCE
-- 🚀 **Angular 19+ Support** - Built for modern Angular with signals-based state management
+- 🚀 **Angular 19–20 Support** - Built for modern Angular with Signals-based state management
 - 🔧 **Easy Configuration** - Simple setup with dependency injection
-- 🌐 **Proxy Support** - Built-in proxy configuration for secure token exchange
+- 🌐 **Backend-Only Exchange** - Required proxy endpoints keep secrets out of browser bundles
 - 📝 **Comprehensive Types** - Full TypeScript interfaces for UAE Pass API
 - 🛡️ **Security First** - Proper PKCE validation and CSRF protection
 - 📊 **Signals-Based** - Reactive state management with Angular signals
@@ -29,20 +31,20 @@ Peer deps: `@angular/core`, `@angular/common`, `rxjs`. Ensure HttpClient is prov
 Add the provider to your application (e.g. `app.config.ts`).
 
 ```ts
-import { provideHttpClient, withFetch } from "@angular/common/http";
-import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from "sensei-uaepass";
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from 'sensei-uaepass';
 
 export const appConfig = {
   providers: [
     provideHttpClient(withFetch()),
     provideUaePass({
-      clientId: "<CLIENT_ID>",
-      redirectUri: "https://your.app/uae-pass/callback",
+      clientId: '<CLIENT_ID>',
+      redirectUri: 'https://your.app/uae-pass/callback',
       isProduction: false,
       language: UaePassLanguageCode.En,
-      scope: "urn:uae:digitalid:profile:general",
-      tokenProxyUrl: "/api/uae-pass/token", // recommended
-      userInfoProxyUrl: "/api/uae-pass/userinfo",
+      scope: 'urn:uae:digitalid:profile:general',
+      tokenProxyUrl: '/api/uae-pass/token', // required
+      userInfoProxyUrl: '/api/uae-pass/userinfo',
       storage: UaePassStorageMode.Session,
     }),
   ],
@@ -52,19 +54,19 @@ export const appConfig = {
 ## Add routes
 
 ```ts
-import { Routes } from "@angular/router";
-import { UaePassCallbackComponent } from "sensei-uaepass";
+import { Routes } from '@angular/router';
+import { UaePassCallbackComponent } from 'sensei-uaepass';
 
 export const routes: Routes = [
   // ...
-  { path: "uae-pass/callback", component: UaePassCallbackComponent },
+  { path: 'uae-pass/callback', component: UaePassCallbackComponent },
 ];
 ```
 
 ## Use the login button
 
 ```html
-<uae-pass-login-button [label]="'Sign in with UAE PASS'" [busyLabel]="'Signing in…'" [logoSrc]="'/assets/uae-pass.svg'" (pressed)="onPressed()"></uae-pass-login-button>
+<uae-pass-login-button [language]="'en'" (pressed)="onPressed()"></uae-pass-login-button>
 ```
 
 The button calls `redirectToAuthorization()` for you. Alternatively, inject `UaePassAuthService` and call it directly.
@@ -92,6 +94,7 @@ ngOnInit() { this.auth.handleRedirectCallback(); }
 - `tokens(): Signal<UaePassTokens|null>` - Access and refresh tokens
 - `profile(): Signal<UaePassUserProfile|null>` - User profile information
 - `error(): Signal<string|null>` - Last error message
+- `errorCode(): Signal<UaePassErrorCode|null>` - Stable machine-readable error code
 - `isAuthenticated(): Signal<boolean>` - Computed authentication state
 
 ### Methods
@@ -105,7 +108,7 @@ ngOnInit() { this.auth.handleRedirectCallback(); }
 
 ### Why Use a Proxy Server?
 
-The proxy server is **highly recommended** for security reasons:
+The proxy server is **required**. `clientSecret` is intentionally not accepted by browser configuration:
 
 1. **Client Secret Protection** - Keeps your client secret secure on the server-side
 2. **CORS Handling** - Avoids cross-origin issues with UAE Pass APIs
@@ -119,21 +122,21 @@ You can replace the proxy server with any backend technology:
 #### Node.js/Express Example
 
 ```javascript
-app.post("/api/uae-pass/token", async (req, res) => {
+app.post('/api/uae-pass/token', async (req, res) => {
   const { code, redirect_uri, code_verifier } = req.body;
 
   const params = new URLSearchParams({
-    grant_type: "authorization_code",
-    client_id: "your-client-id",
-    client_secret: "your-client-secret",
+    grant_type: 'authorization_code',
+    client_id: 'your-client-id',
+    client_secret: 'your-client-secret',
     code,
     redirect_uri,
     code_verifier,
   });
 
-  const response = await fetch("https://stg-id.uaepass.ae/idshub/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const response = await fetch('https://stg-id.uaepass.ae/idshub/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: params.toString(),
   });
 
@@ -168,7 +171,7 @@ public async Task<IActionResult> ExchangeToken([FromBody] TokenRequest request)
 
 ## Notes
 
-- For security, prefer a backend proxy for the token exchange (`tokenProxyUrl`), to avoid exposing client secrets and to handle CORS.
+- `tokenProxyUrl` and `userInfoProxyUrl` are required. Keep UAE PASS client secrets in server-side environment variables only.
 - `storage: UaePassStorageMode.Session | Local | None` controls persistence of tokens/profile across reloads.
 - `acr_values` defaults to web flow in browsers.
 
@@ -213,7 +216,6 @@ All commonly used string unions are exposed as enums for type safety:
 - `UaePassLanguageCode` — En, Ar
 - `OAuthResponseType` — Code
 - `CodeChallengeMethod` — S256
-- `OAuthGrantType` — AuthorizationCode
 
 ## Resources
 

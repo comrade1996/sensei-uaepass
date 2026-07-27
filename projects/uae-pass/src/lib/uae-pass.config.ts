@@ -1,20 +1,19 @@
-import { InjectionToken, Provider } from '@angular/core';
-import { UaePassLanguageCode, UaePassStorageMode } from './uae-pass.enums';
+import type { Provider } from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import type { UaePassLanguageCode, UaePassStorageMode } from './uae-pass.enums';
 
-export type UaePassLanguage = UaePassLanguageCode | (string & {});
+export type UaePassLanguage = UaePassLanguageCode | 'en' | 'ar';
 
 export interface UaePassConfig {
   clientId: string;
   redirectUri: string;
   isProduction: boolean;
   language?: UaePassLanguage;
-  // Strongly recommended to keep secrets on a backend; SPA should prefer a proxy
-  clientSecret?: string;
   // Optional scope override. Default: 'urn:uae:digitalid:profile:general'
   scope?: string;
-  // If CORS blocks direct calls to UAE PASS, set a backend proxy endpoint here
-  tokenProxyUrl?: string;
-  userInfoProxyUrl?: string;
+  // Required backend endpoints keep confidential operations and secrets out of the browser
+  tokenProxyUrl: string;
+  userInfoProxyUrl: string;
   // Request timeout in ms
   requestTimeoutMs?: number;
   // Persistence strategy for tokens/profile. Default: 'none'
@@ -35,6 +34,20 @@ export interface UaePassConfig {
 
 export const UAE_PASS_CONFIG = new InjectionToken<UaePassConfig>('UAE_PASS_CONFIG');
 
+export function validateUaePassConfig(config: UaePassConfig): Readonly<UaePassConfig> {
+  if (!config.clientId?.trim()) throw new Error('UAE PASS clientId is required');
+  if (!config.redirectUri?.trim()) throw new Error('UAE PASS redirectUri is required');
+  if (!config.tokenProxyUrl?.trim()) throw new Error('UAE PASS tokenProxyUrl is required');
+  if (!config.userInfoProxyUrl?.trim()) throw new Error('UAE PASS userInfoProxyUrl is required');
+  if (config.language && config.language !== 'en' && config.language !== 'ar') {
+    throw new Error('UAE PASS language must be "en" or "ar"');
+  }
+  if (config.requestTimeoutMs !== undefined && config.requestTimeoutMs <= 0) {
+    throw new Error('UAE PASS requestTimeoutMs must be greater than zero');
+  }
+  return Object.freeze({ ...config });
+}
+
 export function provideUaePass(config: UaePassConfig): Provider[] {
-  return [{ provide: UAE_PASS_CONFIG, useValue: config }];
+  return [{ provide: UAE_PASS_CONFIG, useValue: validateUaePassConfig(config) }];
 }

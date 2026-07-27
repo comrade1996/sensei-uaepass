@@ -1,192 +1,95 @@
-# 🚀 Deployment Guide
+# Deployment and Release Guide
 
-This guide covers deploying the UAE Pass Angular library to NPM and hosting the demo on GitHub Pages.
+This repository has one release path: a version tag triggers `.github/workflows/publish.yml`, which validates, packages, and publishes `sensei-uaepass` with npm provenance.
 
 ## Prerequisites
 
-1. **GitHub Repository**: Create a new repository on GitHub
-2. **NPM Account**: Create an account at [npmjs.com](https://www.npmjs.com/)
-3. **NPM Token**: Generate an access token in NPM settings
+- Maintainer access to `comrade1996/sensei-uaepass` on GitHub.
+- Maintainer access and two-factor authentication for `sensei-uaepass` on npm.
+- Node.js `22.12.0` or newer and npm.
+- The GitHub `npm` environment and npm trusted publisher described in `GITHUB_SETUP.md`.
+- A clean `main` branch with all required CI checks passing.
 
-## Setup Steps
+## Trusted Publishing
 
-### 1. GitHub Repository Setup
+Do not add `NPM_TOKEN` to GitHub. The release job requests a short-lived credential over OIDC using `id-token: write`. The npm trusted publisher must exactly match:
 
-1. Create a new repository on GitHub (e.g., `uae-pass-angular`)
-2. Clone this project to your local machine
-3. Update the repository URLs in `projects/uae-pass/package.json`
-4. Push your code to GitHub:
+- **Organization or user**: `comrade1996`
+- **Repository**: `sensei-uaepass`
+- **Workflow**: `publish.yml`
+- **Environment**: `npm`
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: UAE Pass Angular library"
-git branch -M main
-git remote add origin https://github.com/yourusername/uae-pass-angular.git
-git push -u origin main
-```
+The workflow upgrades npm before publishing because trusted publishing requires a supported npm CLI.
 
-### 2. NPM Publishing Setup
+## Release Quality Gates
 
-#### Configure NPM Token
-1. Go to [npmjs.com](https://www.npmjs.com/) → Account Settings → Access Tokens
-2. Generate a new **Automation** token
-3. In your GitHub repository, go to Settings → Secrets and Variables → Actions
-4. Add a new secret named `NPM_TOKEN` with your token value
-
-#### Update Package Information
-Update `projects/uae-pass/package.json`:
-```json
-{
-  "name": "your-package-name",
-  "author": "Your Name <your.email@example.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yourusername/uae-pass-angular.git"
-  }
-}
-```
-
-### 3. GitHub Pages Setup
-
-1. In your GitHub repository, go to Settings → Pages
-2. Set Source to "GitHub Actions"
-3. The workflow will automatically deploy on pushes to `main` branch
-
-## Publishing Workflows
-
-### Automatic NPM Publishing
-
-The library will automatically publish to NPM when you create a git tag:
+Run the same release gate locally before opening the release pull request:
 
 ```bash
-# Create and push a version tag
-git tag v1.0.0
-git push origin v1.0.0
+npm ci
+npm run validate
 ```
 
-### Manual NPM Publishing
+This checks formatting, lint, library tests and coverage, production builds, tarball contents, package metadata, type resolution, documentation, and production dependency vulnerabilities.
 
-You can also trigger publishing manually:
+## Versioning
 
-1. Go to Actions tab in your GitHub repository
-2. Select "Publish to NPM" workflow
-3. Click "Run workflow"
-4. Enter the version number (e.g., 1.0.1)
+Follow [Semantic Versioning](https://semver.org/):
 
-### GitHub Pages Deployment
+- **Major**: Breaking API or behavior changes.
+- **Minor**: Backward-compatible features.
+- **Patch**: Backward-compatible fixes.
 
-The demo automatically deploys to GitHub Pages on every push to `main`:
+The root and library manifests must have the same version. Update `CHANGELOG.md` in the same release pull request.
 
-- **Demo URL**: `https://yourusername.github.io/uae-pass-angular/`
-- **Automatic**: Deploys on every push to main branch
-- **Manual**: Can be triggered from Actions tab
+## Release Process
 
-## Version Management
+1. Update the `version` in `package.json`, `package-lock.json`, and `projects/uae-pass/package.json`.
+2. Move the release notes in `CHANGELOG.md` under the matching version and date.
+3. Run `npm run validate`.
+4. Merge the release pull request after all required reviews and CI checks pass.
+5. Create an annotated tag from the exact merge commit and push it:
 
-### Semantic Versioning
-
-Follow [semantic versioning](https://semver.org/):
-- **MAJOR** (1.0.0): Breaking changes
-- **MINOR** (1.1.0): New features, backward compatible
-- **PATCH** (1.0.1): Bug fixes, backward compatible
-
-### Release Process
-
-1. **Update Version**: 
    ```bash
-   cd projects/uae-pass
-   npm version patch  # or minor/major
+   git tag -a v2.0.0 -m "Release v2.0.0"
+   git push origin v2.0.0
    ```
 
-2. **Update Changelog**: Document changes in `CHANGELOG.md`
+6. Approve the `npm` environment deployment if approval protection is enabled.
+7. Verify the GitHub release, attached tarball, npm version, provenance statement, and installation in a clean consumer project.
 
-3. **Create Release**:
-   ```bash
-   git add .
-   git commit -m "Release v1.0.1"
-   git tag v1.0.1
-   git push origin main --tags
-   ```
+The tag must exactly match the version in `projects/uae-pass/package.json`. The workflow fails before publishing if they differ.
 
-## Environment Configuration
+## Backend Deployment
 
-### Production vs Staging
+Angular applications must send authorization codes to `tokenProxyUrl` and request identity data through `userInfoProxyUrl`. Deploy both routes over HTTPS and keep the UAE PASS client secret only in the backend secret manager.
 
-The demo can be configured for different environments:
+Production backends must enforce exact frontend origins, validate request bodies, apply rate limits, use strict outbound timeouts, redact tokens and authorization codes from logs, and return generic upstream errors. See the canonical backend proxy guide in GitBook for the endpoint contracts.
 
-```typescript
-// For staging
-provideUaePass({
-  isProduction: false,
-  // ... other config
-})
+## Monitoring
 
-// For production
-provideUaePass({
-  isProduction: true,
-  // ... other config
-})
-```
-
-### GitHub Pages Configuration
-
-The demo is built with the correct base href for GitHub Pages:
-```bash
-ng build --base-href="/uae-pass-angular/"
-```
-
-## Monitoring Deployments
-
-### NPM Package Status
-- Check package at: `https://www.npmjs.com/package/your-package-name`
-- Monitor download stats and versions
-
-### GitHub Pages Status
-- Check deployment status in Actions tab
-- View live demo at your GitHub Pages URL
-
-### CI/CD Status
-- All workflows run on push/PR to main
-- Check Actions tab for build status
-- Workflows include linting, testing, and building
+- Review the `Release` workflow and GitHub environment deployment history.
+- Verify the published version at `https://www.npmjs.com/package/sensei-uaepass`.
+- Confirm the npm package page displays provenance linked to the expected repository and workflow.
+- Monitor Dependabot, code scanning, dependency review, and private vulnerability reports.
+- Treat unexpected publishing attempts or provenance identities as security incidents.
 
 ## Troubleshooting
 
-### NPM Publishing Issues
-- **Token expired**: Generate new NPM token
-- **Package name taken**: Choose a unique package name
-- **Build fails**: Check build logs in Actions tab
+- **OIDC authentication fails**: Confirm the npm trusted publisher repository, workflow filename, and environment exactly match the workflow.
+- **Environment waits indefinitely**: Check required reviewers and deployment branch rules for the GitHub `npm` environment.
+- **Tag validation fails**: Make the tag and `projects/uae-pass/package.json` versions identical.
+- **Version already exists**: Never overwrite a release. Increment the version and publish a new tag.
+- **Quality gate fails**: Reproduce with `npm ci && npm run validate`; do not bypass the gate.
+- **Package contents fail**: Run `npm run package:check` and inspect the npm dry-run output.
 
-### GitHub Pages Issues
-- **404 errors**: Check base-href configuration
-- **Assets not loading**: Verify asset paths are relative
-- **Deployment fails**: Check Pages settings and workflow permissions
+## Rollback
 
-### Common Solutions
-```bash
-# Clear npm cache
-npm cache clean --force
+Published npm versions are immutable. If a release is faulty:
 
-# Rebuild everything
-npm run clean
-npm ci
-npm run build:lib
+1. Deprecate the affected version on npm with a clear migration message.
+2. Revert or fix the source through a reviewed pull request.
+3. Publish a new patch version through the normal signed tag workflow.
+4. Use npm unpublish only when npm policy permits it and the security response requires it.
 
-# Check package contents
-cd dist/uae-pass
-npm pack --dry-run
-```
-
-## Security Considerations
-
-1. **Never commit secrets**: Use GitHub secrets for tokens
-2. **Review dependencies**: Regularly audit npm packages
-3. **Update regularly**: Keep Angular and dependencies updated
-4. **Proxy usage**: Use backend proxy for UAE Pass API calls in production
-
-## Support
-
-- **Issues**: Create issues on GitHub repository
-- **Discussions**: Use GitHub Discussions for questions
-- **Documentation**: Keep README.md updated with latest features
+Report suspected credential compromise or malicious publication through the private vulnerability reporting process in `SECURITY.md`.

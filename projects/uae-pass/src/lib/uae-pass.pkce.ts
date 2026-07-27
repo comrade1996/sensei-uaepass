@@ -3,22 +3,34 @@
 
 const PKCE_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
 
+function getCrypto(): Crypto {
+  const cryptoObj = globalThis.crypto;
+  if (!cryptoObj?.getRandomValues || !cryptoObj.subtle) {
+    throw new Error('Web Crypto is required for UAE PASS authentication');
+  }
+  return cryptoObj;
+}
+
 function randomString(length: number, charset = PKCE_CHARSET): string {
-  const result: string[] = [];
-  const cryptoObj = globalThis.crypto || (globalThis as unknown as { msCrypto?: Crypto }).msCrypto;
-  if (!cryptoObj) {
-    // Non-cryptographic fallback; consumers should polyfill crypto in SSR if needed
-    for (let i = 0; i < length; i++) {
-      result.push(charset[Math.floor(Math.random() * charset.length)]);
-    }
-    return result.join('');
+  if (!Number.isInteger(length) || length < 1) {
+    throw new RangeError('Random string length must be a positive integer');
   }
 
-  const rnd = new Uint8Array(length);
-  cryptoObj.getRandomValues(rnd);
-  for (let i = 0; i < length; i++) {
-    result.push(charset[rnd[i] % charset.length]);
+  const cryptoObj = getCrypto();
+  const result: string[] = [];
+  const maximumValidByte = Math.floor(256 / charset.length) * charset.length;
+
+  while (result.length < length) {
+    const randomBytes = new Uint8Array(Math.max(32, length - result.length));
+    cryptoObj.getRandomValues(randomBytes);
+    for (const byte of randomBytes) {
+      if (byte < maximumValidByte) {
+        result.push(charset[byte % charset.length]);
+        if (result.length === length) break;
+      }
+    }
   }
+
   return result.join('');
 }
 
@@ -37,9 +49,11 @@ function base64Encode(bytes: Uint8Array): string {
     const o3 = i < bytes.length ? bytes[i++] : NaN;
 
     const c1 = o1 >> 2;
-    const c2 = ((o1 & 0x03) << 4) | (isNaN(o2) ? 0 : ((o2 as number) >> 4));
-    const c3 = isNaN(o2) ? 64 : (((o2 as number) & 0x0f) << 2) | (isNaN(o3) ? 0 : ((o3 as number) >> 6));
-    const c4 = isNaN(o3) ? 64 : ((o3 as number) & 0x3f);
+    const c2 = ((o1 & 0x03) << 4) | (isNaN(o2) ? 0 : (o2 as number) >> 4);
+    const c3 = isNaN(o2)
+      ? 64
+      : (((o2 as number) & 0x0f) << 2) | (isNaN(o3) ? 0 : (o3 as number) >> 6);
+    const c4 = isNaN(o3) ? 64 : (o3 as number) & 0x3f;
 
     output += chars[c1] + chars[c2] + chars[c3] + chars[c4];
   }
@@ -54,11 +68,7 @@ function base64UrlEncode(bytes: Uint8Array): string {
 async function sha256(input: string): Promise<Uint8Array> {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
-  const cryptoObj: Crypto | undefined = (globalThis as any).crypto ?? (globalThis as any).msCrypto;
-  if (!cryptoObj?.subtle) {
-    throw new Error('WebCrypto SubtleCrypto is not available');
-  }
-  const digest = await cryptoObj.subtle.digest('SHA-256', data);
+  const digest = await getCrypto().subtle.digest('SHA-256', data);
   return new Uint8Array(digest);
 }
 
@@ -67,7 +77,7 @@ export async function generateCodeChallengeS256(codeVerifier: string): Promise<s
   return base64UrlEncode(hash);
 }
 
-export async function generatePkcePair(): Promise<{ codeVerifier: string; codeChallenge: string; }>{
+export async function generatePkcePair(): Promise<{ codeVerifier: string; codeChallenge: string }> {
   const codeVerifier = randomString(64);
   const codeChallenge = await generateCodeChallengeS256(codeVerifier);
   return { codeVerifier, codeChallenge };

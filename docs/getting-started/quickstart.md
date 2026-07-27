@@ -1,6 +1,6 @@
 # Quickstart
 
-1) Provide configuration (e.g. `app.config.ts`):
+## 1. Provide configuration
 
 ```ts
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -22,7 +22,7 @@ export const appConfig = {
 };
 ```
 
-2) Add a callback route:
+## 2. Add a callback route
 
 ```ts
 import { Routes } from '@angular/router';
@@ -33,13 +33,13 @@ export const routes: Routes = [
 ];
 ```
 
-3) Drop the login button:
+## 3. Add the login button
 
 ```html
 <uae-pass-login-button></uae-pass-login-button>
 ```
 
-4) (Optional) Use the callback component explicitly
+## 4. Optionally handle callback events
 
 ```html
 <!-- If you want to render and handle events directly -->
@@ -48,11 +48,11 @@ export const routes: Routes = [
 
 The routed approach (step 2) is typically enough; the component auto-processes the URL and redirects back to `/` on success.
 
-5) Choose a backend proxy (Node or .NET)
+## 5. Configure a backend proxy
 
 - Node: see Examples → [Node Proxy](../examples/node-proxy.md)
 - .NET (ASP.NET Core): see Examples → [ASP.NET Core Proxy](../examples/dotnet-proxy.md)
 
-Set `tokenProxyUrl` and `userInfoProxyUrl` in `provideUaePass({ ... })` to point at your backend endpoints.
+Set required `tokenProxyUrl` and `userInfoProxyUrl` values in `provideUaePass({ ... })` to point at your backend endpoints.
 
 That’s it. On click, the button redirects to UAE PASS. The callback component completes the flow and restores tokens/profile.

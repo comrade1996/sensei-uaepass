@@ -1,32 +1,47 @@
 // Ephemeral storage across redirect for PKCE + state
 // Uses sessionStorage to survive full-page redirects and be cleared easily.
 
-const PREFIX = 'uae-pass:' as const;
+const PREFIX = 'uae-pass:transaction:' as const;
 
-function key(name: string) {
-  return `${PREFIX}${name}`;
+export interface UaePassTransaction {
+  state: string;
+  codeVerifier: string;
+  createdAt: number;
+}
+
+function getStore(): Storage {
+  if (typeof sessionStorage === 'undefined') {
+    throw new Error('Session storage is required to complete UAE PASS authentication');
+  }
+  return sessionStorage;
+}
+
+function key(state: string): string {
+  return `${PREFIX}${encodeURIComponent(state)}`;
 }
 
 export const UaePassMemory = {
-  setState(state: string): void {
-    if (typeof sessionStorage === 'undefined') return;
-    sessionStorage.setItem(key('state'), state);
+  save(transaction: UaePassTransaction): void {
+    getStore().setItem(key(transaction.state), JSON.stringify(transaction));
   },
-  getState(): string | null {
-    if (typeof sessionStorage === 'undefined') return null;
-    return sessionStorage.getItem(key('state'));
+  load(state: string): UaePassTransaction | null {
+    const raw = getStore().getItem(key(state));
+    if (!raw) return null;
+    try {
+      const transaction = JSON.parse(raw) as Partial<UaePassTransaction>;
+      if (
+        transaction.state !== state ||
+        typeof transaction.codeVerifier !== 'string' ||
+        typeof transaction.createdAt !== 'number'
+      ) {
+        return null;
+      }
+      return transaction as UaePassTransaction;
+    } catch {
+      return null;
+    }
   },
-  setCodeVerifier(verifier: string): void {
-    if (typeof sessionStorage === 'undefined') return;
-    sessionStorage.setItem(key('code_verifier'), verifier);
-  },
-  getCodeVerifier(): string | null {
-    if (typeof sessionStorage === 'undefined') return null;
-    return sessionStorage.getItem(key('code_verifier'));
-  },
-  clear(): void {
-    if (typeof sessionStorage === 'undefined') return;
-    sessionStorage.removeItem(key('state'));
-    sessionStorage.removeItem(key('code_verifier'));
+  clear(state: string): void {
+    getStore().removeItem(key(state));
   },
 };

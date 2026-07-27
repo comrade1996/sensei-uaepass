@@ -1,23 +1,29 @@
 {
   "name": "sensei-uaepass",
-  "version": "1.0.1",
-  "description": "🥋 Master of UAE Pass integration! Angular OAuth 2.0 (PKCE) client with sensei-level signals-based state management, multi-language support, and elegant UI components.",
+  "version": "2.0.0",
+  "description": "UAE PASS authentication library for Angular with OAuth 2.0, PKCE, Signals, standalone components, Arabic/RTL, and secure backend proxy support.",
   "keywords": [
+    "uaepass",
     "uae-pass",
+    "uae",
+    "uae-pass-angular",
+    "angular-uaepass",
+    "angular",
+    "angular-authentication",
+    "digital-identity",
+    "oauth",
     "oauth2",
     "pkce",
-    "angular",
     "signals",
-    "sensei",
-    "master",
     "authentication",
-    "localization",
+    "sign-in",
     "arabic",
     "rtl"
   ],
   "license": "MIT",
+  "type": "module",
   "author": "Comrade <omirgibreel7@gmail.com>",
-  "homepage": "https://github.com/comrade1996/sensei-uaepass#readme",
+  "homepage": "https://sensei-5.gitbook.io/sensei-uaepass/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/comrade1996/sensei-uaepass.git"
@@ -26,8 +32,8 @@
     "url": "https://github.com/comrade1996/sensei-uaepass/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^20.1.7",
-    "@angular/core": "^20.1.7",
+    "@angular/common": ">=19.2.0 <21.0.0",
+    "@angular/core": ">=19.2.0 <21.0.0",
     "rxjs": "^7.8.0"
   },
   "dependencies": {
