@@ -4,6 +4,8 @@
 - Getting Started
   - [Installation](getting-started/installation.md)
   - [Quickstart](getting-started/quickstart.md)
+  - [Angular Compatibility](getting-started/compatibility.md)
+  - [Migrate to Version 2](getting-started/migration-v2.md)
 - Configuration
   - [UAE Pass Config](configuration/uaepass-config.md)
   - [Language & Logos](configuration/language-and-logos.md)
@@ -11,6 +13,9 @@
 - Components
   - [Login Button](components/login-button.md)
   - [Callback Component](components/callback.md)
+- Authentication and Security
+  - [OAuth 2.0 and PKCE](security/oauth-pkce.md)
+  - [Backend Proxy Boundary](security/backend-proxy.md)
 - Services
   - [Auth Service](services/auth-service.md)
 - Examples
@@ -20,6 +25,7 @@
 - Troubleshooting
   - [FAQ](troubleshooting/faq.md)
   - [Common Errors](troubleshooting/common-errors.md)
+  - [Callback, CORS, and State Errors](troubleshooting/authentication-errors.md)
 - Deployment
   - [Publishing to GitBook](deployment/publishing-to-gitbook.md)
   - [Production Checklist](deployment/production-checklist.md)

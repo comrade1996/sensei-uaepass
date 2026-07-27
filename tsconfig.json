@@ -18,10 +18,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "paths": {
-      "sensei-uaepass": [
-        "./dist/uae-pass",
-        "./projects/uae-pass/src/public-api"
-      ]
+      "sensei-uaepass": ["./dist/uae-pass", "./projects/uae-pass/src/public-api"]
     }
   },
   "angularCompilerOptions": {

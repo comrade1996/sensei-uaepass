@@ -7,6 +7,7 @@ export * from './lib/uae-pass.config';
 export * from './lib/uae-pass.constants';
 export * from './lib/uae-pass.types';
 export * from './lib/uae-pass.enums';
+export * from './lib/uae-pass.error';
 
 // Core service
 export * from './lib/uae-pass.oauth.service';

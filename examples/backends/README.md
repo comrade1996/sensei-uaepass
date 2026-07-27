@@ -9,6 +9,7 @@ This directory contains backend implementation examples for use with the Sensei 
 A complete, production-ready backend implementation using Node.js and Express.
 
 **Features:**
+
 - ✅ Secure token exchange with PKCE support
 - ✅ User info retrieval
 - ✅ Rate limiting and security headers
@@ -31,12 +32,12 @@ npm start
 The server will start on `http://localhost:3001` with the following endpoints:
 
 - `POST /api/uae-pass/token` - Token exchange
-- `POST /api/uae-pass/userinfo` - User info retrieval  
+- `POST /api/uae-pass/userinfo` - User info retrieval
 - `GET /health` - Health check
 
 ## Why Use a Backend Proxy?
 
-The backend proxy is **highly recommended** for security reasons:
+The backend proxy is **required** by Sensei UAE PASS 2.x:
 
 1. **Client Secret Protection** - Keeps your UAE Pass client secret secure on the server-side
 2. **CORS Handling** - Avoids cross-origin issues with UAE Pass APIs
@@ -76,7 +77,7 @@ provideUaePass({
   isProduction: false,
   tokenProxyUrl: 'http://localhost:3001/api/uae-pass/token',
   userInfoProxyUrl: 'http://localhost:3001/api/uae-pass/userinfo',
-})
+});
 ```
 
 ## Deployment
