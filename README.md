@@ -408,7 +408,7 @@ This project is licensed under the MIT License.
 
 ## Support
 
-Use [GitHub Issues](https://github.com/comrade1996/sensei-uaepass/issues) for reproducible bugs and [SUPPORT.md](SUPPORT.md) for support boundaries.
+Use [GitHub Issues](https://github.com/comrade1996/sensei-uaepass/issues) for reproducible bugs. See the [troubleshooting guide](https://sensei-5.gitbook.io/sensei-uaepass/troubleshooting/faq) for support boundaries and common issues.
 
 ## Resources
 
