@@ -1,40 +1,28 @@
 import type { Signal } from '@angular/core';
-import { UaePassAuthStatus } from './uae-pass.enums';
 
+import type { UaePassAuthStatus } from './uae-pass.enums';
+
+/**
+ * Minimized application identity returned by the BFF.
+ * Applications should extend this shape only with fields they genuinely need.
+ */
 export interface UaePassUserProfile {
-  sub?: string;
-  fullnameAR?: string;
-  gender?: string;
-  mobile?: string;
-  lastnameEN?: string;
+  sub: string;
   fullnameEN?: string;
-  uuid?: string;
-  lastnameAR?: string;
-  idn?: string;
-  nationalityEN?: string;
-  firstnameEN?: string;
-  userType?: string;
-  nationalityAR?: string;
-  firstnameAR?: string;
+  fullnameAR?: string;
   email?: string;
+  userType?: string;
+  [key: string]: unknown;
 }
 
-export interface UaePassTokens {
-  access_token: string;
-  token_type?: string;
-  expires_in?: number;
-  refresh_token?: string;
-  scope?: string;
-  id_token?: string;
-  [k: string]: unknown;
+export interface UaePassSessionResponse {
+  authenticated: boolean;
+  profile?: UaePassUserProfile | null;
+  csrfToken?: string;
 }
-
-// Re-export enum for convenience so consumers can import from either types or enums module
-export { UaePassAuthStatus };
 
 export interface UaePassAuthState {
   status: Signal<UaePassAuthStatus>;
-  tokens: Signal<UaePassTokens | null>;
   profile: Signal<UaePassUserProfile | null>;
   error: Signal<string | null>;
 }

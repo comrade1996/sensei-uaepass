@@ -1,12 +1,10 @@
 export enum UaePassErrorCode {
   InvalidConfiguration = 'invalid_configuration',
-  CryptoUnavailable = 'crypto_unavailable',
-  StorageUnavailable = 'storage_unavailable',
-  MissingTransaction = 'missing_transaction',
-  InvalidCallbackUrl = 'invalid_callback_url',
-  StateMismatch = 'state_mismatch',
-  TokenExchangeFailed = 'token_exchange_failed',
+  RedirectUnavailable = 'redirect_unavailable',
+  SessionFetchFailed = 'session_fetch_failed',
+  InvalidSessionResponse = 'invalid_session_response',
   AuthorizationFailed = 'authorization_failed',
+  LogoutFailed = 'logout_failed',
 }
 
 export class UaePassError extends Error {

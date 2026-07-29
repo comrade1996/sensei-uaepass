@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
@@ -41,8 +41,8 @@ jobs:
       - name: Lint source
         run: npm run lint
 
-      - name: Test library with coverage thresholds
-        run: npm run test:lib
+      - name: Test Angular library and BFF
+        run: npm test
 
       - name: Build library and demo
         run: npm run build
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload coverage
         if: matrix.node-version == '22.12.0'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: coverage
           path: coverage
@@ -72,9 +72,59 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Review dependency changes
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
         with:
           fail-on-severity: high
+
+  angular-compatibility:
+    name: ${{ matrix.label }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Angular 19.2 minimum
+            angular: 19.2.0
+          - label: Latest Angular 19
+            angular: ^19.2.0
+          - label: Angular 20 minimum
+            angular: 20.0.0
+          - label: Latest Angular 20
+            angular: ^20.0.0
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.12.0
+          cache: npm
+
+      - name: Install workspace
+        run: npm ci
+
+      - name: Install Angular matrix version
+        env:
+          ANGULAR_VERSION: ${{ matrix.angular }}
+        run: >-
+          npm install --no-save --legacy-peer-deps
+          "@angular/animations@$ANGULAR_VERSION"
+          "@angular/common@$ANGULAR_VERSION"
+          "@angular/compiler@$ANGULAR_VERSION"
+          "@angular/compiler-cli@$ANGULAR_VERSION"
+          "@angular/core@$ANGULAR_VERSION"
+          "@angular/forms@$ANGULAR_VERSION"
+          "@angular/platform-browser@$ANGULAR_VERSION"
+          "@angular/platform-browser-dynamic@$ANGULAR_VERSION"
+          "@angular/router@$ANGULAR_VERSION"
+          "@angular/cli@$ANGULAR_VERSION"
+          "@angular-devkit/build-angular@$ANGULAR_VERSION"
+          "ng-packagr@$ANGULAR_VERSION"
+
+      - name: Test and build library
+        run: npm run test:lib && npm run build:lib

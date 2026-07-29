@@ -1,58 +1,54 @@
 # Quickstart
 
-## 1. Provide configuration
+## 1. Configure Angular
 
 ```ts
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from 'sensei-uaepass';
+import { provideUaePass } from 'sensei-uaepass';
 
 export const appConfig = {
   providers: [
     provideHttpClient(withFetch()),
     provideUaePass({
-      clientId: '<CLIENT_ID>',
-      redirectUri: 'http://localhost:4200/uae-pass/callback',
-      isProduction: false,
-      language: UaePassLanguageCode.Ar, // auto-Arabic UI
-      storage: UaePassStorageMode.Session,
-      tokenProxyUrl: '/api/uae-pass/token',
-      userInfoProxyUrl: '/api/uae-pass/userinfo',
-    })
-  ]
+      loginUrl: '/auth/uae-pass/login',
+      sessionUrl: '/api/session',
+      logoutUrl: '/auth/logout',
+      language: 'en',
+    }),
+  ],
 };
 ```
 
-## 2. Add a callback route
+## 2. Add the button
 
 ```ts
-import { Routes } from '@angular/router';
-import { UaePassCallbackComponent } from 'sensei-uaepass';
+import { UaePassLoginButtonComponent } from 'sensei-uaepass';
 
-export const routes: Routes = [
-  { path: 'uae-pass/callback', component: UaePassCallbackComponent },
-];
+@Component({
+  standalone: true,
+  imports: [UaePassLoginButtonComponent],
+  template: `<uae-pass-login-button />`,
+})
+export class LoginComponent {}
 ```
 
-## 3. Add the login button
+## 3. Run a BFF
 
-```html
-<uae-pass-login-button></uae-pass-login-button>
+Use `examples/bff/nodejs-express` as the reference. The registered UAE PASS redirect
+URI must point to the BFF callback, not to an Angular route:
+
+```text
+https://bff.example.com/auth/uae-pass/callback
 ```
 
-## 4. Optionally handle callback events
+The Angular application does not need an OAuth callback route.
 
-```html
-<!-- If you want to render and handle events directly -->
-<uae-pass-callback (success)="onOk()" (failed)="onErr($event)"></uae-pass-callback>
+## 4. Read session state
+
+```ts
+readonly auth = inject(UaePassAuthService);
+readonly profile = this.auth.profile;
+readonly isAuthenticated = this.auth.isAuthenticated;
 ```
 
-The routed approach (step 2) is typically enough; the component auto-processes the URL and redirects back to `/` on success.
-
-## 5. Configure a backend proxy
-
-- Node: see Examples → [Node Proxy](../examples/node-proxy.md)
-- .NET (ASP.NET Core): see Examples → [ASP.NET Core Proxy](../examples/dotnet-proxy.md)
-
-Set required `tokenProxyUrl` and `userInfoProxyUrl` values in `provideUaePass({ ... })` to point at your backend endpoints.
-
-That’s it. On click, the button redirects to UAE PASS. The callback component completes the flow and restores tokens/profile.
+No browser storage mode or token API exists in version 3.

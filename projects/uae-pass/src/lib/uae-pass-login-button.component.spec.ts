@@ -2,9 +2,9 @@ import { provideHttpClient } from '@angular/common/http';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { UaePassAuthService } from './uae-pass-auth.service';
 import { UAE_PASS_CONFIG } from './uae-pass.config';
 import { UaePassLoginButtonComponent } from './uae-pass-login-button.component';
-import { UaePassAuthService } from './uae-pass.oauth.service';
 
 describe('UaePassLoginButtonComponent', () => {
   let fixture: ComponentFixture<UaePassLoginButtonComponent>;
@@ -17,12 +17,11 @@ describe('UaePassLoginButtonComponent', () => {
         {
           provide: UAE_PASS_CONFIG,
           useValue: {
-            clientId: 'client',
-            redirectUri: 'https://app.example.com/callback',
-            isProduction: false,
+            loginUrl: '/auth/uae-pass/login',
+            sessionUrl: '/api/session',
+            logoutUrl: '/auth/logout',
+            autoRestoreSession: false,
             language: 'ar',
-            tokenProxyUrl: '/token',
-            userInfoProxyUrl: '/userinfo',
             buttonLogos: { arabic: '/arabic.svg', english: '/english.svg' },
           },
         },
@@ -38,8 +37,8 @@ describe('UaePassLoginButtonComponent', () => {
     const image: HTMLImageElement = fixture.nativeElement.querySelector('img');
 
     expect(image.getAttribute('src')).toBe('/arabic.svg');
-    expect(image.alt).toContain('هوية الإمارات');
-    expect(button.getAttribute('aria-label')).toContain('هوية الإمارات');
+    expect(image.alt).toContain('الهوية الرقمية');
+    expect(button.getAttribute('aria-label')).toContain('الهوية الرقمية');
   });
 
   it('allows an input language to override global configuration', () => {
@@ -53,12 +52,12 @@ describe('UaePassLoginButtonComponent', () => {
   it('emits pressed and starts authentication when clicked', () => {
     const auth = TestBed.inject(UaePassAuthService);
     spyOn(fixture.componentInstance.pressed, 'emit');
-    spyOn(auth, 'redirectToAuthorization').and.resolveTo();
+    spyOn(auth, 'login');
 
     const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     button.click();
 
     expect(fixture.componentInstance.pressed.emit).toHaveBeenCalled();
-    expect(auth.redirectToAuthorization).toHaveBeenCalled();
+    expect(auth.login).toHaveBeenCalled();
   });
 });

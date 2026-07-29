@@ -17,6 +17,19 @@ export default tseslint.config(
       globals: globals.node,
     },
   },
+  {
+    ...eslint.configs.recommended,
+    files: ['examples/bff/nodejs-express/**/*.js'],
+    languageOptions: {
+      globals: globals.node,
+      ecmaVersion: 2022,
+      sourceType: 'commonjs',
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
   ...tseslint.configs.recommended.map((config) => ({
     ...config,
     files: ['projects/**/*.ts'],

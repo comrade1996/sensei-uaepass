@@ -8,7 +8,8 @@
 2. Else `UaePassConfig.language` (enum or string; `'ar'` normalized)
 3. Else defaults to `'en'`
 
-The service also includes `ui_locales` in the authorize URL based on `UaePassConfig.language`.
+The service sends `ui_locales=en` or `ui_locales=ar` to the BFF login endpoint. The
+BFF validates it and includes it in the UAE PASS authorization URL.
 
 ## Logos
 

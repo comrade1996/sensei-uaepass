@@ -1,7 +1,7 @@
 {
   "name": "sensei-uaepass",
-  "version": "2.0.0",
-  "description": "UAE PASS authentication library for Angular with OAuth 2.0, PKCE, Signals, standalone components, Arabic/RTL, and secure backend proxy support.",
+  "version": "3.0.0",
+  "description": "BFF-first UAE PASS session client for Angular with Signals, standalone components, Arabic, and RTL support.",
   "keywords": [
     "uaepass",
     "uae-pass",
@@ -11,9 +11,8 @@
     "angular",
     "angular-authentication",
     "digital-identity",
-    "oauth",
-    "oauth2",
-    "pkce",
+    "bff",
+    "server-session",
     "signals",
     "authentication",
     "sign-in",

@@ -1,22 +1,18 @@
-# UAE PASS OAuth 2.0 and PKCE Security
+# OAuth 2.0 and PKCE
 
-Sensei UAE PASS uses Authorization Code with PKCE S256 for browser authentication.
+Version 3 moves the complete OAuth transaction to the BFF.
 
-## Authorization transaction
+1. The BFF always generates cryptographically random state.
+2. It stores the transaction in the server-side session.
+3. When `UAE_PASS_PKCE_ENABLED=true`, it also stores a verifier and sends only its
+   S256 challenge to UAE PASS.
+4. The registered callback returns to the BFF.
+5. The BFF validates and consumes the transaction before exchanging the code.
+6. The browser never receives a verifier, authorization code, or token response.
 
-1. The library obtains random state and verifier bytes from Web Crypto.
-2. It derives the S256 challenge and stores the verifier in session storage under the state value.
-3. UAE PASS redirects to the registered callback with a code and state.
-4. The library verifies the callback origin and path, loads the exact state transaction, and rejects missing or expired transactions.
-5. The authorization code and verifier are sent to the configured backend token endpoint.
-6. The transaction is deleted after success or failure to prevent replay.
+Transactions are short-lived, one-time-use, bound to the initiating session, and safe
+under concurrent login attempts.
 
-There is no `Math.random` fallback. Authentication fails closed when Web Crypto is unavailable.
-
-## Application responsibilities
-
-- Use HTTPS in production.
-- Register exact redirect and logout URLs with UAE PASS.
-- Apply rate limits, origin checks, request validation, and secure headers to backend endpoints.
-- Never log authorization codes, verifiers, access tokens, refresh tokens, profiles, or client secrets.
-- Validate provider responses and apply least-privilege scopes.
+The published UAE PASS web contract does not document PKCE parameters. PKCE is
+disabled by default and must be enabled only after the UAE PASS onboarding team
+confirms S256 support for the registered client.

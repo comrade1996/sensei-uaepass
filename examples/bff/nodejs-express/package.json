@@ -1,0 +1,20 @@
+{
+  "name": "sensei-uaepass-node-bff",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Server-owned UAE PASS BFF reference implementation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/bff.test.js",
+    "lint": "eslint src test server.js",
+    "docker:build": "docker build -t sensei-uaepass-bff .",
+    "docker:run": "docker run --env-file .env -p 3001:3001 sensei-uaepass-bff"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
