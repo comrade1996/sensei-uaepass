@@ -1,11 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import type { ApplicationConfig } from '@angular/core';
+import { provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import {
-  provideUaePass,
-  UaePassLanguageCode,
-  UaePassStorageMode,
-} from 'sensei-uaepass';
+import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from 'sensei-uaepass';
 
 import { routes } from './app.routes';
 
@@ -16,7 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideUaePass({
       clientId: 'sandbox_stage',
-      clientSecret: 'sandbox_stage',
       redirectUri: 'http://localhost:4200/uae-pass/callback',
       logoutRedirectUri: 'http://localhost:4200/',
       isProduction: false,

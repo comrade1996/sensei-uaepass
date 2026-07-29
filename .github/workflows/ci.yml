@@ -1,71 +1,80 @@
-name: 🥋 Sensei UAE Pass CI
+name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
+  quality:
+    name: Node ${{ matrix.node-version }} quality gates
     runs-on: ubuntu-latest
-    
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [18, 20]
-        
+        node-version: [22.12.0, 24]
+
     steps:
-      - name: 🛒 Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          
-      - name: 📦 Install dependencies
-        run: npm ci
-        
-      - name: 🔍 Lint code
-        run: npm run lint --if-present || echo "No linting configured"
-        
-      - name: 🏗️ Build library
-        run: npm run build:lib
-        
-        
-      - name: 🏗️ Build demo
-        run: |
-          cd projects/demo
-          npm run build || echo "No demo build configured"
+          cache: npm
 
-  build-check:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: 🛒 Checkout code
-        uses: actions/checkout@v4
-        
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
-        
-      - name: 🏗️ Build library
-        run: npm run build:lib
-        
-      - name: 📋 Verify package structure
-        run: |
-          echo "Checking build output..."
-          ls -la dist/uae-pass/
-          echo "Package.json content:"
-          cat dist/uae-pass/package.json
-          echo "Checking for required files..."
-          test -f dist/uae-pass/README.md || echo "❌ README.md missing"
-          test -f dist/uae-pass/package.json || echo "❌ package.json missing"
-          test -d dist/uae-pass/esm2022 || echo "❌ ESM build missing"
-          echo "✅ Build verification complete"
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint source
+        run: npm run lint
+
+      - name: Test library with coverage thresholds
+        run: npm run test:lib
+
+      - name: Build library and demo
+        run: npm run build
+
+      - name: Validate package contents and types
+        run: npm run package:check
+
+      - name: Lint documentation
+        if: matrix.node-version == '22.12.0'
+        run: npm run docs:lint
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Upload coverage
+        if: matrix.node-version == '22.12.0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+          if-no-files-found: error
+          retention-days: 14
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

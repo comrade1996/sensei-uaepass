@@ -1,6 +1,6 @@
 # Node Proxy
 
-A proxy is recommended to avoid exposing secrets and to handle CORS.
+A backend proxy is required to keep confidential credentials out of Angular bundles and to control CORS.
 
 ## Option 1: Quick local proxy
 
@@ -10,7 +10,7 @@ At repo root, a simple proxy is available:
 npm run start:proxy
 ```
 
-This starts `proxy-server.js` on port 8081 by default. Point `tokenProxyUrl` and `userInfoProxyUrl` to it, e.g. `/api/uae-pass/token` and `/api/uae-pass/userinfo` via your dev server proxy.
+This starts `proxy-server.js` on port 3001 by default. Point `tokenProxyUrl` and `userInfoProxyUrl` to it, e.g. `/api/uae-pass/token` and `/api/uae-pass/userinfo` via your dev server proxy.
 
 ## Option 2: Express example
 

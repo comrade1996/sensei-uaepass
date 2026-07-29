@@ -1,4 +1,4 @@
-import { Signal } from '@angular/core';
+import type { Signal } from '@angular/core';
 import { UaePassAuthStatus } from './uae-pass.enums';
 
 export interface UaePassUserProfile {

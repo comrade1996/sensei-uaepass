@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible package defect
+title: '[Bug]: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, tokens, Emirates IDs, profiles, or other personal information. Report security issues privately.
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: 2.0.0
+    validations:
+      required: true
+  - type: input
+    id: angular
+    attributes:
+      label: Angular and browser versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Provide steps and a repository or StackBlitz when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true

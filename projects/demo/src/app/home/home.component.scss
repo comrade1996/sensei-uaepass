@@ -3,7 +3,13 @@
   display: block;
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }
 
 .app-container {
@@ -20,8 +26,8 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
   &::before {
     content: '';
     position: absolute;
@@ -52,12 +58,17 @@
 .sensei-logo {
   font-size: 4rem;
   animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .app-title {
@@ -67,16 +78,16 @@
   display: flex;
   flex-direction: column;
   line-height: 0.9;
-  
+
   .sensei-text {
     color: #f59e0b;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   }
-  
+
   .uaepass-text {
     color: #e2e8f0;
     font-size: 0.8em;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -89,13 +100,13 @@
 
 .version-badge {
   display: inline-block;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 // Main Content
@@ -109,20 +120,22 @@
 }
 
 // Card Styles
-.auth-card, .profile-card, .tokens-card {
-  background: rgba(255,255,255,0.9);
+.auth-card,
+.profile-card,
+.tokens-card {
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(226,232,240,0.5);
+  border: 1px solid rgba(226, 232, 240, 0.5);
   border-radius: 16px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(30,41,59,0.08);
+  box-shadow: 0 4px 20px rgba(30, 41, 59, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(30,41,59,0.12);
-    border-color: rgba(245,158,11,0.3);
+    box-shadow: 0 8px 32px rgba(30, 41, 59, 0.12);
+    border-color: rgba(245, 158, 11, 0.3);
   }
 }
 
@@ -140,7 +153,9 @@
   margin: 0;
 }
 
-.status-icon, .profile-icon, .tokens-icon {
+.status-icon,
+.profile-icon,
+.tokens-icon {
   font-size: 1.5rem;
 }
 
@@ -157,9 +172,9 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  background: rgba(245,158,11,0.08);
+  background: rgba(245, 158, 11, 0.08);
   border-radius: 12px;
-  border: 1px solid rgba(245,158,11,0.15);
+  border: 1px solid rgba(245, 158, 11, 0.15);
 }
 
 .status-label {
@@ -174,19 +189,31 @@
   font-size: 1.1rem;
   font-weight: 700;
   text-transform: capitalize;
-  
-  &.status-idle { color: #64748b; }
-  &.status-loading { color: #f59e0b; }
-  &.status-authenticated { color: #10b981; }
-  &.status-error { color: #ef4444; }
+
+  &.status-idle {
+    color: #64748b;
+  }
+  &.status-loading {
+    color: #f59e0b;
+  }
+  &.status-authenticated {
+    color: #10b981;
+  }
+  &.status-error {
+    color: #ef4444;
+  }
 }
 
 .auth-indicator {
   font-size: 1.1rem;
   font-weight: 700;
-  
-  &.authenticated { color: #10b981; }
-  &.not-authenticated { color: #ef4444; }
+
+  &.authenticated {
+    color: #10b981;
+  }
+  &.not-authenticated {
+    color: #ef4444;
+  }
 }
 
 // Error Alert
@@ -208,13 +235,13 @@
 
 .error-content {
   flex: 1;
-  
+
   strong {
     color: #dc2626;
     display: block;
     margin-bottom: 0.5rem;
   }
-  
+
   p {
     color: #991b1b;
     margin: 0;
@@ -229,7 +256,8 @@
   gap: 1rem;
 }
 
-.login-section, .logout-section {
+.login-section,
+.logout-section {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -248,12 +276,12 @@
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  
+
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -262,7 +290,7 @@
 .btn-secondary {
   background: #64748b;
   color: white;
-  
+
   &:hover {
     background: #475569;
   }
@@ -271,7 +299,7 @@
 .btn-danger {
   background: #ef4444;
   color: white;
-  
+
   &:hover {
     background: #dc2626;
   }
@@ -280,31 +308,34 @@
 .btn-warning {
   background: #f59e0b;
   color: white;
-  
+
   &:hover {
     background: #d97706;
   }
 }
 
 // Profile Grid
-.profile-grid, .tokens-grid {
+.profile-grid,
+.tokens-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.profile-item, .token-item {
+.profile-item,
+.token-item {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  background: rgba(245,158,11,0.05);
+  background: rgba(245, 158, 11, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(245,158,11,0.1);
+  border: 1px solid rgba(245, 158, 11, 0.1);
 }
 
-.profile-label, .token-label {
+.profile-label,
+.token-label {
   font-size: 0.85rem;
   font-weight: 600;
   color: #64748b;
@@ -312,21 +343,22 @@
   letter-spacing: 0.05em;
 }
 
-.profile-value, .token-value {
+.profile-value,
+.token-value {
   font-size: 1rem;
   font-weight: 500;
   color: #1e293b;
   word-break: break-all;
-  
+
   &.arabic {
     font-family: 'Noto Sans Arabic', Arial, sans-serif;
     direction: rtl;
   }
-  
+
   &.mono {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-size: 0.9rem;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     padding: 0.25rem 0.5rem;
     border-radius: 6px;
   }
@@ -335,7 +367,7 @@
 // JSON Details
 .json-details {
   margin-top: 1.5rem;
-  border: 1px solid rgba(245,158,11,0.15);
+  border: 1px solid rgba(245, 158, 11, 0.15);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -345,14 +377,14 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(245,158,11,0.1);
+  background: rgba(245, 158, 11, 0.1);
   cursor: pointer;
   font-weight: 600;
   color: #1e293b;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background: rgba(245,158,11,0.15);
+    background: rgba(245, 158, 11, 0.15);
   }
 }
 
@@ -391,9 +423,9 @@
 
 // Footer
 .app-footer {
-  background: rgba(30,64,175,0.1);
+  background: rgba(30, 64, 175, 0.1);
   backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255,255,255,0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   padding: 2rem;
   text-align: center;
   margin-top: auto;
@@ -416,8 +448,13 @@
 }
 
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .tech-stack {
@@ -428,13 +465,13 @@
 }
 
 .tech-badge {
-  background: rgba(245,158,11,0.1);
+  background: rgba(245, 158, 11, 0.1);
   color: #1e293b;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid rgba(245,158,11,0.2);
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 // Responsive Design
@@ -442,24 +479,26 @@
   .hero-section {
     padding: 2rem 1rem;
   }
-  
+
   .app-title {
     font-size: 2rem;
   }
-  
+
   .main-content {
     padding: 1rem;
   }
-  
+
   .status-display {
     grid-template-columns: 1fr;
   }
-  
-  .profile-grid, .tokens-grid {
+
+  .profile-grid,
+  .tokens-grid {
     grid-template-columns: 1fr;
   }
-  
-  .login-section, .logout-section {
+
+  .login-section,
+  .logout-section {
     flex-direction: column;
     align-items: stretch;
   }

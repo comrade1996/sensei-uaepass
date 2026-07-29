@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/comrade1996/sensei-uaepass/security/advisories/new
+    about: Report vulnerabilities privately.
+  - name: UAE PASS official support
+    url: https://docs.uaepass.ae/
+    about: Use official channels for onboarding, tenant, and provider service issues.

@@ -1,24 +1,30 @@
 # Publishing to GitBook
 
-This project is set up to work with GitBook via `gitbook.yaml` and `docs/SUMMARY.md`.
+This project uses the repository-level `.gitbook.yaml` file to set `docs` as the content root, `docs/README.md` as the landing page, and `docs/SUMMARY.md` as navigation.
 
 ## One-time setup
 
-1. Create a GitBook Space
-2. Connect your Git provider and select this repository
-3. Set Docs Root to `docs/` (or GitBook will pick it via `gitbook.yaml`)
+1. Create or open the GitBook space for `sensei-uaepass`.
+2. Open the space's Git Sync or GitHub integration settings.
+3. Authorize the GitBook GitHub application for `comrade1996/sensei-uaepass` only.
+4. Select repository `sensei-uaepass` and branch `main`.
+5. Leave the project directory blank or select `/`, the repository root.
+6. Do not set the project directory to `/docs`; GitBook must read `.gitbook.yaml` from the repository root first.
+7. Complete the initial sync and verify the landing page and navigation.
 
 ## Syncing content
 
-- Each push to the default branch (or selected branch) triggers a sync/build
-- In GitBook, open your Space → Content → Sync to manually trigger updates if needed
-- The sidebar is driven by `docs/SUMMARY.md`
+- Each merged push to `main` triggers a sync and build.
+- In GitBook, open the space's content or Git Sync view to trigger an update manually when needed.
+- Treat GitHub `main` as the source of truth and review GitBook-created pull requests before merging.
+- The sidebar is driven by `docs/SUMMARY.md`.
 
 ## Tips
 
-- Keep all Markdown under `docs/` (existing VitePress `index.html` is ignored)
-- The `docs/node_modules/` folder is ignored in navigation since pages are driven by `SUMMARY.md`
-- Use small, focused pages and reference actual code symbols (components, services) for clarity
+- Keep consumer documentation under `docs/`.
+- Keep every published page in `docs/SUMMARY.md`.
+- Use small, focused pages and reference actual package symbols.
+- Verify internal links and code blocks after every structural change.
 
 ## Custom domain & visibility
 

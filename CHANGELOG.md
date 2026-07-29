@@ -5,11 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-07-27
+
+### Changed
+
+- Require `tokenProxyUrl` and `userInfoProxyUrl`; confidential token and profile requests are backend-only.
+- Remove browser `clientSecret` configuration and direct UAE PASS endpoint calls.
+- Support Angular 19.2 through Angular 20 with Node.js 22.12 and 24 validation.
+- Publish through one tag-driven npm workflow with provenance and package validation.
+- Use the GitBook site as the single canonical documentation URL.
+
+### Security
+
+- Fail closed when Web Crypto or session storage is unavailable.
+- Generate PKCE and state with unbiased cryptographic randomness.
+- Store concurrent PKCE transactions by state, validate callback origin/path, expire transactions, and prevent replay.
+- Namespace persisted data per client and reject expired or malformed tokens.
+- Add stable `UaePassErrorCode` values and remove production debug logging.
+
+### Quality
+
+- Add authentication, PKCE, storage, configuration, component, Arabic, and accessibility tests.
+- Enforce global coverage, ESLint, formatting, documentation lint, build, audit, and package checks in CI.
+- Add security, support, contribution, ownership, issue, pull-request, and Dependabot policies.
+
+### Migration
+
+See the [version 2 migration guide](docs/getting-started/migration-v2.md). Remove `clientSecret` from Angular code and configure both required backend endpoints before upgrading.
+
 ## [1.0.0] - 2025-08-15
 
 ### 🎉 Initial Release
 
 #### Added
+
 - **OAuth 2.0 Integration** - Complete UAE Pass OAuth 2.0 flow support with PKCE
 - **Angular 19+ Support** - Built for modern Angular with signals-based state management
 - **Standalone Components** - Modern Angular architecture
@@ -32,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Proxy Server Example** - Node.js/Express proxy for secure token exchange
 
 #### Configuration Options
+
 - `clientId` - UAE Pass application client ID
 - `clientSecret` - Optional client secret for confidential clients
 - `redirectUri` - OAuth redirect URI
@@ -46,10 +76,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `requestTimeoutMs` - HTTP request timeout
 
 #### API Reference
+
 - **Signals**: `status()`, `tokens()`, `profile()`, `error()`, `isAuthenticated()`
 - **Methods**: `redirectToAuthorization()`, `handleRedirectCallback()`, `logout()`, `resetError()`
 
 #### Security & Compliance
+
 - Based on official UAE Pass documentation
 - PKCE implementation for enhanced security
 - State parameter validation
@@ -61,6 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Future Releases
 
 ### Planned Features
+
 - Unit tests coverage
 - E2E testing examples
 - Additional proxy server examples (ASP.NET Core, Python, Java)
@@ -71,4 +104,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-*Built with sensei-level mastery* 🥋
+_Built with sensei-level mastery_ 🥋
