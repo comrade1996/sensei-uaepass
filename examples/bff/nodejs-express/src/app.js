@@ -1,5 +1,6 @@
 const express = require('express');
 const { randomUUID } = require('node:crypto');
+const rateLimit = require('express-rate-limit');
 
 const { createOAuthTransaction, randomBase64Url, safeEqual } = require('./crypto');
 const { MemorySessionStore } = require('./session-store');
@@ -36,24 +37,16 @@ function cookieHeader(config, id, maxAgeSeconds) {
   return parts.join('; ');
 }
 
-function createRateLimiter({ now = Date.now, windowMs = 15 * 60 * 1000 } = {}) {
-  const buckets = new Map();
-  return (limit) => (request, response, next) => {
-    const key = `${request.ip}:${request.path}`;
-    const current = buckets.get(key);
-    const timestamp = now();
-    const bucket =
-      !current || current.resetAt <= timestamp
-        ? { count: 0, resetAt: timestamp + windowMs }
-        : current;
-    bucket.count += 1;
-    buckets.set(key, bucket);
-    if (bucket.count > limit) {
-      response.status(429).json({ error: 'rate_limited', correlationId: request.correlationId });
-      return;
-    }
-    next();
-  };
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
+function createRateLimiter(max) {
+  return rateLimit({
+    windowMs: RATE_LIMIT_WINDOW_MS,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: (request) => ({ error: 'rate_limited', correlationId: request.correlationId }),
+  });
 }
 
 function createApp({
@@ -70,7 +63,6 @@ function createApp({
 
   const app = express();
   const client = new UaePassClient(config, fetchImpl);
-  const rateLimit = createRateLimiter({ now });
   app.disable('x-powered-by');
   app.set('trust proxy', config.trustProxy);
 
@@ -145,7 +137,7 @@ function createApp({
     return true;
   }
 
-  app.get('/auth/uae-pass/login', rateLimit(10), async (request, response, next) => {
+  app.get('/auth/uae-pass/login', createRateLimiter(10), async (request, response, next) => {
     try {
       let sessionId = getSessionId(request);
       let session = sessionId ? await store.get(sessionId) : null;
@@ -183,12 +175,12 @@ function createApp({
     }
   });
 
-  app.get('/auth/uae-pass/callback', rateLimit(30), async (request, response, next) => {
+  app.get('/auth/uae-pass/callback', createRateLimiter(30), async (request, response, next) => {
     try {
       const sessionId = getSessionId(request);
       const session = sessionId ? await store.get(sessionId) : null;
       const state = typeof request.query.state === 'string' ? request.query.state : '';
-      if (state.length > 256) {
+      if (!/^[A-Za-z0-9_-]{1,256}$/.test(state)) {
         response
           .status(400)
           .json({ error: 'invalid_transaction', correlationId: request.correlationId });
@@ -244,7 +236,7 @@ function createApp({
     }
   });
 
-  app.get('/api/session', rateLimit(120), async (request, response, next) => {
+  app.get('/api/session', createRateLimiter(120), async (request, response, next) => {
     try {
       const sessionId = getSessionId(request);
       const session = sessionId ? await store.get(sessionId) : null;
@@ -269,7 +261,7 @@ function createApp({
     }
   });
 
-  app.post('/auth/logout', rateLimit(20), async (request, response, next) => {
+  app.post('/auth/logout', createRateLimiter(20), async (request, response, next) => {
     try {
       if (!requireAllowedOrigin(request, response)) return;
       const sessionId = getSessionId(request);
