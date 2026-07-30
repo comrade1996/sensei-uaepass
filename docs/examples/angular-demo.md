@@ -1,34 +1,18 @@
 # Angular Demo
 
-A demo app is included to showcase the library in `projects/demo/`.
-
-## Run locally
+Run Angular and the BFF together:
 
 ```bash
-# 1) Build the library so the demo consumes the latest build
-npm run build:lib
-
-# 2) Start the demo app (opens http://localhost:4200)
-npm run start:demo
-
-# 3) Start the required proxy in a second terminal
-npm run start:proxy
+npm run start:full
 ```
 
-Ensure your `provideUaePass({...})` in the demo uses your Client ID and redirect URIs.
+Before starting, set the required BFF environment values documented in
+`examples/bff/nodejs-express/.env.example`.
 
-Key scripts from `package.json`:
+The demo:
 
-- `build:lib` — builds the library
-- `start:demo` — serves the demo in production mode
-- `start:proxy` — runs `proxy-server.js`
-
-## Callback route
-
-The demo includes a callback route for UAE PASS:
-
-```ts
-{ path: 'uae-pass/callback', component: UaePassCallbackComponent }
-```
-
-If you change routes, mirror the same redirect URI in your UAE PASS tenant configuration.
+- restores an application session;
+- redirects login to the BFF;
+- shows only a minimized display name;
+- performs CSRF-protected logout;
+- contains no OAuth callback route, token display, or browser token storage.

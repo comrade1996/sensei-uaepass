@@ -1,22 +1,31 @@
 # FAQ
 
-- **Arabic button shows English**
-  - Ensure `language: UaePassLanguageCode.Ar` in `provideUaePass(...)`.
-  - Do not pass `[language]` to the button unless you need to override.
-  - If overriding logos via `buttonLogos`, verify the Arabic path exists.
+## Does Angular need a callback route?
 
-- **Callback page shows error**
-  - Confirm the route `{ path: 'uae-pass/callback', component: UaePassCallbackComponent }` exists.
-  - Check redirect URI exactly matches the value registered with UAE PASS.
+No. The registered callback belongs to the BFF:
+`/auth/uae-pass/callback`.
 
-- **State mismatch (security check failed)**
-  - Do not open the callback URL in a new tab or reuse old tabs.
-  - Clear site data and retry.
+## Where are tokens stored?
 
-- **CORS or 4xx on token/userinfo**
-  - Use a backend proxy and set `tokenProxyUrl`/`userInfoProxyUrl`.
-  - Verify server allows your app’s origin.
+Only in the server-side session. They are never returned by `/api/session`.
 
-- **Stuck on loading**
-  - Open console and network tabs. Check `authorize` redirect and token exchange calls.
-  - Ensure `clientId`, `redirectUri`, and environment (`isProduction`) are correct.
+## Can I use the in-memory session store in production?
+
+No. Production startup rejects it. Configure a shared store using
+`SESSION_STORE_MODULE`.
+
+## Why is `isAuthenticated()` false when a session response exists?
+
+An authenticated response must contain a runtime-valid profile with a non-empty
+`sub` and a CSRF token.
+
+## Which token client-authentication method should I use?
+
+The published UAE PASS web contract requires HTTP Basic authentication with the
+issued client ID and secret. The reference BFF implements that method only.
+
+## Should I enable PKCE?
+
+Only after UAE PASS confirms S256 support for the registered client. The published
+web contract does not document PKCE, so the BFF defaults
+`UAE_PASS_PKCE_ENABLED=false`.

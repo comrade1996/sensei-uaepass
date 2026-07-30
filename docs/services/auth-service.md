@@ -1,43 +1,34 @@
-# Auth Service
+# Authentication Service
 
-Service: `UaePassAuthService` (provided in root)
+`UaePassAuthService` is provided in the root injector.
 
 ## Signals
 
-- `status: UaePassAuthStatus` — Idle, Authorizing, ExchangingToken, Authenticated, Error, LoggedOut
-- `tokens: UaePassTokens | null`
-- `profile: UaePassUserProfile | null`
-- `error: string | null`
-- `isAuthenticated: boolean`
+- `status` — `Idle`, `LoadingSession`, `Authorizing`, `Authenticated`,
+  `LoggingOut`, `Error`, or `LoggedOut`
+- `profile` — minimized, runtime-validated BFF profile
+- `isAuthenticated` — true only when status and identity are valid
+- `error` and `errorCode` — safe client-side error details
+
+There is deliberately no public token signal.
 
 ## Methods
 
-- `redirectToAuthorization(): Promise<void>` — Redirect to UAE PASS
-- `handleRedirectCallback(currentUrl?: string): Promise<void>` — Complete OAuth flow
-- `logout(): void` — Clear local state and call official logout
-- `resetError(): void`
+### `login(returnPath?: string): void`
 
-### Advanced
+Redirects to the BFF login endpoint. Only a local return path is sent.
 
-- `buildAuthorizeUrl(): Promise<string>` — Build URL with PKCE/state
-- `exchangeToken(code: string): Promise<UaePassTokens>` — Token exchange
-- `fetchUserInfo(accessToken: string): Promise<UaePassUserProfile | null>` — Profile fetch
+### `restoreSession(): Promise<boolean>`
 
-## Usage
+Calls the BFF session endpoint with credentials. An authenticated response requires a
+non-empty stable `sub` and a CSRF token.
 
-```ts
-import { inject, Component, effect } from '@angular/core';
-import { UaePassAuthService } from 'sensei-uaepass';
+### `logout(): Promise<void>`
 
-@Component({ selector: 'app-example', standalone: true, template: `...` })
-export class ExampleComponent {
-  auth = inject(UaePassAuthService);
+Posts to the BFF logout endpoint using the in-memory CSRF token. The BFF invalidates
+the application session and returns the official UAE PASS logout URL. The browser
+navigates to that URL so both sessions are ended.
 
-  // react to status
-  fx = effect(() => {
-    if (this.auth.isAuthenticated()) {
-      console.log('Logged in', this.auth.profile());
-    }
-  });
-}
-```
+### `resetError(): void`
+
+Clears current client-side error state.

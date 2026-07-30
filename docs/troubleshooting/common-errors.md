@@ -1,25 +1,25 @@
 # Common Errors
 
-- **Security check failed (state mismatch)**
-  - Cause: `state` in callback doesn’t match stored value.
-  - Fix: Don’t reuse old tabs; ensure the whole flow happens in one tab. Clear site data and retry.
+## `invalid_transaction`
 
-- **CORS / Network errors on token or userinfo**
-  - Cause: Direct browser calls blocked.
-  - Fix: Use a backend proxy and set `tokenProxyUrl` and `userInfoProxyUrl` in `provideUaePass(...)`.
+The callback state is missing, expired, already consumed, or not bound to the
+initiating session. Start a new login.
 
-- **Invalid redirect_uri / 400 from token endpoint**
-  - Cause: Redirect URI mismatch with tenant config.
-  - Fix: Ensure exact match (scheme, host, path). Update tenant or code.
+## `invalid_token_response`
 
-- **No profile after successful token exchange**
-  - Cause: `userinfo` call failed or profile is empty.
-  - Fix: Check proxy logs and access token; handle gracefully. Authentication is still valid.
+The provider response lacks a usable bearer token. Confirm the environment and
+client-authentication contract.
 
-- **Callback route not reached**
-  - Cause: Missing route mapping.
-  - Fix: Add `{ path: 'uae-pass/callback', component: UaePassCallbackComponent }`.
+## `invalid_token_expiry`
 
-- **Stuck on loading**
-  - Cause: Redirect not triggered or callback not handled.
-  - Fix: Check console logs and network. Ensure `redirectToAuthorization()` is called on click and `UaePassCallbackComponent` is rendered on the callback route.
+The provider did not return a positive finite expiry. The BFF fails closed.
+
+## `origin_rejected` or `csrf_rejected`
+
+Confirm the exact Angular origin allowlist, credentialed request settings, and that
+the current CSRF token came from `/api/session`.
+
+## Session is always anonymous
+
+Check cookie `Secure` and `SameSite` behavior, reverse-proxy TLS termination,
+`TRUST_PROXY`, the shared store, and browser credentialed requests.

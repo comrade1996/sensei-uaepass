@@ -1,225 +1,50 @@
-# Sensei UAE PASS: Angular Authentication Library
+# sensei-uaepass
 
-UAE PASS authentication for Angular 19 and 20 with OAuth 2.0 Authorization Code + PKCE, Signals, standalone components, Arabic/RTL support, and mandatory backend proxy endpoints.
+BFF-first UAE PASS session integration for Angular 19.2–20.
 
-[Documentation](https://sensei-5.gitbook.io/sensei-uaepass/) · [GitHub](https://github.com/comrade1996/sensei-uaepass) · [Issues](https://github.com/comrade1996/sensei-uaepass/issues)
-
-> This package is independently maintained and is not affiliated with or endorsed by UAE PASS. Validate production integrations against the [official documentation](https://docs.uaepass.ae/feature-guides/authentication/web-application).
-
-## Features
-
-- 🔐 **OAuth 2.0 Integration** - Complete UAE Pass OAuth 2.0 flow support with PKCE
-- 🚀 **Angular 19–20 Support** - Built for modern Angular with Signals-based state management
-- 🔧 **Easy Configuration** - Simple setup with dependency injection
-- 🌐 **Backend-Only Exchange** - Required proxy endpoints keep secrets out of browser bundles
-- 📝 **Comprehensive Types** - Full TypeScript interfaces for UAE Pass API
-- 🛡️ **Security First** - Proper PKCE validation and CSRF protection
-- 📊 **Signals-Based** - Reactive state management with Angular signals
-- 🏛️ **Official Compliance** - Based on official UAE Pass documentation
-- 🎌 **Standalone Components** - Modern Angular architecture
-
-## Install
-
-```bash
-npm install sensei-uaepass
-```
-
-Peer deps: `@angular/core`, `@angular/common`, `rxjs`. Ensure HttpClient is provided in your app.
-
-## Provide configuration
-
-Add the provider to your application (e.g. `app.config.ts`).
+The package intentionally does not perform OAuth token exchange in the browser and
+does not expose UAE PASS tokens. Configure the three application BFF endpoints:
 
 ```ts
-import { provideHttpClient, withFetch } from '@angular/common/http';
-import { provideUaePass, UaePassLanguageCode, UaePassStorageMode } from 'sensei-uaepass';
-
-export const appConfig = {
-  providers: [
-    provideHttpClient(withFetch()),
-    provideUaePass({
-      clientId: '<CLIENT_ID>',
-      redirectUri: 'https://your.app/uae-pass/callback',
-      isProduction: false,
-      language: UaePassLanguageCode.En,
-      scope: 'urn:uae:digitalid:profile:general',
-      tokenProxyUrl: '/api/uae-pass/token', // required
-      userInfoProxyUrl: '/api/uae-pass/userinfo',
-      storage: UaePassStorageMode.Session,
-    }),
-  ],
-};
-```
-
-## Add routes
-
-```ts
-import { Routes } from '@angular/router';
-import { UaePassCallbackComponent } from 'sensei-uaepass';
-
-export const routes: Routes = [
-  // ...
-  { path: 'uae-pass/callback', component: UaePassCallbackComponent },
-];
-```
-
-## Use the login button
-
-```html
-<uae-pass-login-button [language]="'en'" (pressed)="onPressed()"></uae-pass-login-button>
-```
-
-The button calls `redirectToAuthorization()` for you. Alternatively, inject `UaePassAuthService` and call it directly.
-
-## Handle callback result (optional)
-
-`UaePassCallbackComponent` emits outputs you can use to react:
-
-```html
-<uae-pass-callback (success)="onLogin()" (failed)="onLoginError($event)"></uae-pass-callback>
-```
-
-You can also handle programmatically:
-
-```ts
-constructor(private auth: UaePassAuthService) {}
-ngOnInit() { this.auth.handleRedirectCallback(); }
-```
-
-## Service API
-
-### Signals (Reactive State)
-
-- `status(): Signal<UaePassAuthStatus>` - Current authentication status
-- `tokens(): Signal<UaePassTokens|null>` - Access and refresh tokens
-- `profile(): Signal<UaePassUserProfile|null>` - User profile information
-- `error(): Signal<string|null>` - Last error message
-- `errorCode(): Signal<UaePassErrorCode|null>` - Stable machine-readable error code
-- `isAuthenticated(): Signal<boolean>` - Computed authentication state
-
-### Methods
-
-- `redirectToAuthorization(): Promise<void>` - Redirect to UAE Pass login
-- `handleRedirectCallback(url?: string): Promise<void>` - Handle callback from UAE Pass
-- `logout(): void` - Logout and clear session
-- `resetError(): void` - Clear error state
-
-## Proxy Server Setup
-
-### Why Use a Proxy Server?
-
-The proxy server is **required**. `clientSecret` is intentionally not accepted by browser configuration:
-
-1. **Client Secret Protection** - Keeps your client secret secure on the server-side
-2. **CORS Handling** - Avoids cross-origin issues with UAE Pass APIs
-3. **Token Security** - Prevents exposure of sensitive tokens in browser
-4. **Request Validation** - Adds an extra layer of validation
-
-### Backend Alternatives
-
-You can replace the proxy server with any backend technology:
-
-#### Node.js/Express Example
-
-```javascript
-app.post('/api/uae-pass/token', async (req, res) => {
-  const { code, redirect_uri, code_verifier } = req.body;
-
-  const params = new URLSearchParams({
-    grant_type: 'authorization_code',
-    client_id: 'your-client-id',
-    client_secret: 'your-client-secret',
-    code,
-    redirect_uri,
-    code_verifier,
-  });
-
-  const response = await fetch('https://stg-id.uaepass.ae/idshub/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString(),
-  });
-
-  const data = await response.json();
-  res.json(data);
+provideUaePass({
+  loginUrl: '/auth/uae-pass/login',
+  sessionUrl: '/api/session',
+  logoutUrl: '/auth/logout',
+  language: 'en',
 });
 ```
 
-#### ASP.NET Core Example
+Use the standalone login button:
 
-```csharp
-[HttpPost("api/uae-pass/token")]
-public async Task<IActionResult> ExchangeToken([FromBody] TokenRequest request)
+```html
+<uae-pass-login-button />
+```
+
+Or inject `UaePassAuthService` and use:
+
+- `login(returnPath?)`
+- `restoreSession()`
+- `logout()`
+- `status()`
+- `profile()`
+- `isAuthenticated()`
+- `error()` and `errorCode()`
+
+The BFF must return the following session contract:
+
+```json
 {
-    var parameters = new Dictionary<string, string>
-    {
-        ["grant_type"] = "authorization_code",
-        ["client_id"] = "your-client-id",
-        ["client_secret"] = "your-client-secret",
-        ["code"] = request.Code,
-        ["redirect_uri"] = request.RedirectUri,
-        ["code_verifier"] = request.CodeVerifier
-    };
-
-    var content = new FormUrlEncodedContent(parameters);
-    var response = await client.PostAsync("https://stg-id.uaepass.ae/idshub/token", content);
-    var result = await response.Content.ReadAsStringAsync();
-
-    return Ok(JsonSerializer.Deserialize<object>(result));
+  "authenticated": true,
+  "profile": {
+    "sub": "application-stable-subject",
+    "fullnameEN": "Example User"
+  },
+  "csrfToken": "opaque-csrf-token"
 }
 ```
 
-## Notes
+`csrfToken` is retained only in memory and sent as `X-CSRF-Token` during logout.
+Use an opaque `HttpOnly`, `Secure`, intentionally configured `SameSite` application
+session cookie.
 
-- `tokenProxyUrl` and `userInfoProxyUrl` are required. Keep UAE PASS client secrets in server-side environment variables only.
-- `storage: UaePassStorageMode.Session | Local | None` controls persistence of tokens/profile across reloads.
-- `acr_values` defaults to web flow in browsers.
-
-## Demo
-
-A demo application is included in this workspace to showcase the library:
-
-```bash
-# Build the library first
-npm run build:lib
-
-# Start the demo app
-npm run start:demo
-
-# Start the proxy server (in another terminal)
-node proxy-server.js
-```
-
-The demo shows:
-
-- UAE Pass login button with enum-based configuration
-- Real-time authentication status display
-- User profile and token information
-- Proper routing with callback handling
-
-### Demo Configuration
-
-The demo uses staging environment with these settings:
-
-- `clientId: 'sandbox_stage'`
-- `redirectUri: 'http://localhost:4200/uae-pass/callback'`
-- `language: UaePassLanguageCode.En`
-- `storage: UaePassStorageMode.Session`
-
-## Enums
-
-All commonly used string unions are exposed as enums for type safety:
-
-- `UaePassAuthStatus` — Idle, Authorizing, ExchangingToken, Authenticated, Error, LoggedOut
-- `UaePassStorageMode` — None, Session, Local
-- `UaePassAcr` — Web, MobileOnDevice
-- `UaePassLanguageCode` — En, Ar
-- `OAuthResponseType` — Code
-- `CodeChallengeMethod` — S256
-
-## Resources
-
-- 📖 [Complete Documentation](https://sensei-5.gitbook.io/sensei-uaepass/)
-- 🔗 [NPM Package](https://www.npmjs.com/package/sensei-uaepass)
-- 📚 [Official UAE Pass Documentation](https://docs.uaepass.ae/)
-- 🚀 [UAE Pass Onboarding Guide](https://docs.uaepass.ae/getting-onboarded-with-uaepass)
+This project is not certified, approved, or endorsed by UAE PASS.

@@ -1,5 +1,9 @@
 # Migrate to Version 2
 
+> Historical guide for applications that must remain on the legacy 2.x line. New
+> integrations should use version 3 and the [version 3 migration
+> guide](migration-v3.md).
+
 Version 2 is a security-focused major release.
 
 ## Required changes

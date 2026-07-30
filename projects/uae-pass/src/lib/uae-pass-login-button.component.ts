@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UaePassAuthService } from './uae-pass.oauth.service';
+import { UaePassAuthService } from './uae-pass-auth.service';
 import { UaePassAuthStatus, UaePassLanguageCode } from './uae-pass.enums';
 import { UAE_PASS_CONFIG } from './uae-pass.config';
 import { getUaePassTexts } from './uae-pass.i18n';
@@ -127,7 +127,11 @@ export class UaePassLoginButtonComponent {
   // Computed properties
   readonly isBusy = computed(() => {
     const s = this.auth.status();
-    return s === UaePassAuthStatus.Authorizing || s === UaePassAuthStatus.ExchangingToken;
+    return (
+      s === UaePassAuthStatus.Authorizing ||
+      s === UaePassAuthStatus.LoadingSession ||
+      s === UaePassAuthStatus.LoggingOut
+    );
   });
 
   readonly resolvedLanguage = computed<'en' | 'ar'>(() => {
@@ -154,6 +158,6 @@ export class UaePassLoginButtonComponent {
 
   handleLogin(): void {
     this.pressed.emit();
-    this.auth.redirectToAuthorization();
+    this.auth.login();
   }
 }

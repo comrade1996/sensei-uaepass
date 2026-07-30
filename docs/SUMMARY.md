@@ -5,27 +5,32 @@
   - [Installation](getting-started/installation.md)
   - [Quickstart](getting-started/quickstart.md)
   - [Angular Compatibility](getting-started/compatibility.md)
-  - [Migrate to Version 2](getting-started/migration-v2.md)
+  - [Migrate to Version 3](getting-started/migration-v3.md)
+  - [Historical Version 2 Migration](getting-started/migration-v2.md)
 - Configuration
-  - [UAE Pass Config](configuration/uaepass-config.md)
-  - [Language & Logos](configuration/language-and-logos.md)
-  - [Storage Modes](configuration/storage.md)
+  - [Angular Configuration](configuration/uaepass-config.md)
+  - [Language and Logos](configuration/language-and-logos.md)
 - Components
   - [Login Button](components/login-button.md)
-  - [Callback Component](components/callback.md)
 - Authentication and Security
+  - [BFF Architecture](security/bff-architecture.md)
+  - [UAE PASS Web Contract](security/uae-pass-contract.md)
   - [OAuth 2.0 and PKCE](security/oauth-pkce.md)
-  - [Backend Proxy Boundary](security/backend-proxy.md)
+  - [Threat Model](security/threat-model.md)
+  - [Data Minimization](security/data-minimization.md)
+- Architecture Decisions
+  - [ADR 001: BFF Security Boundary](architecture/adr-001-bff-security-boundary.md)
 - Services
-  - [Auth Service](services/auth-service.md)
+  - [Authentication Service](services/auth-service.md)
 - Examples
   - [Angular Demo](examples/angular-demo.md)
-  - [Node Proxy](examples/node-proxy.md)
-  - [ASP.NET Core Proxy](examples/dotnet-proxy.md)
+  - [Node.js/Express BFF](examples/node-bff.md)
 - Troubleshooting
   - [FAQ](troubleshooting/faq.md)
   - [Common Errors](troubleshooting/common-errors.md)
-  - [Callback, CORS, and State Errors](troubleshooting/authentication-errors.md)
+  - [Authentication and Session Errors](troubleshooting/authentication-errors.md)
 - Deployment
   - [Publishing to GitBook](deployment/publishing-to-gitbook.md)
   - [Production Checklist](deployment/production-checklist.md)
+- Roadmap
+  - [Security and Production Readiness](roadmap/security-and-production-readiness.md)

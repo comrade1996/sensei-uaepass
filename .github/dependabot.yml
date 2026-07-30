@@ -28,3 +28,11 @@ updates:
     labels:
       - dependencies
       - github-actions
+  - package-ecosystem: npm
+    directory: /examples/bff/nodejs-express
+    schedule:
+      interval: weekly
+      day: monday
+    labels:
+      - dependencies
+      - bff

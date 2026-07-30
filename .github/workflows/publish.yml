@@ -21,12 +21,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
@@ -45,11 +45,18 @@ jobs:
           tag_version="${GITHUB_REF_NAME#v}"
           test "$package_version" = "$tag_version"
 
+      - name: Verify signed release tag
+        run: git verify-tag "${GITHUB_REF_NAME}"
+
       - name: Run release quality gates
         run: npm run validate
 
       - name: Create package tarball
         run: npm pack ./dist/uae-pass
+
+      - name: Generate CycloneDX SBOM
+        shell: bash
+        run: npm sbom --sbom-format cyclonedx > sensei-uaepass-sbom.cdx.json
 
       - name: Publish with provenance
         run: npm publish ./dist/uae-pass --access public --provenance
@@ -60,6 +67,7 @@ jobs:
         run: >-
           gh release create "${{ github.ref_name }}"
           sensei-uaepass-*.tgz
+          sensei-uaepass-sbom.cdx.json
           --verify-tag
           --generate-notes
           --title "Sensei UAE PASS ${{ github.ref_name }}"

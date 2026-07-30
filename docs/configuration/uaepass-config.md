@@ -1,32 +1,24 @@
-# UAE Pass Config
+# Configuration
 
-Interface: `UaePassConfig` from `projects/uae-pass/src/lib/uae-pass.config.ts`.
-
-- `clientId: string` — UAE PASS client ID.
-- `redirectUri: string` — Your app’s redirect URL.
-- `isProduction: boolean` — Targets prod vs staging endpoints.
-- `language?: 'en' | 'ar' | UaePassLanguageCode` — Default UI language; used in `ui_locales`.
-- `scope?: string` — Default: `urn:uae:digitalid:profile:general`.
-- `tokenProxyUrl: string` — Required backend endpoint to exchange code for tokens.
-- `userInfoProxyUrl: string` — Required backend endpoint to fetch profile.
-- `requestTimeoutMs?: number` — Request timeout (ms). Default: 20000.
-- `storage?: UaePassStorageMode | 'none'|'session'|'local'` — Token/profile persistence. Default: `'none'`.
-- `blockSOP1?: boolean` — Display-only toggle for SOP1 messaging.
-- `serviceProviderEnglishName?: string` — Optional display name.
-- `serviceProviderArabicName?: string` — Optional display name.
-- `logoutRedirectUri?: string` — Optional; else uses `redirectUri`.
-- `buttonLogos?: { english?: string; arabic?: string }` — Override button images.
-
-Provide via DI:
+| Field | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `loginUrl` | Yes | — | BFF endpoint that starts login |
+| `sessionUrl` | Yes | — | BFF endpoint that returns the application session |
+| `logoutUrl` | Yes | — | CSRF-protected BFF logout endpoint |
+| `language` | No | `en` | Login-button language (`en` or `ar`) |
+| `requestTimeoutMs` | No | `20000` | Session and logout request timeout |
+| `autoRestoreSession` | No | `true` | Restore the BFF session when the service starts |
+| `buttonLogos` | No | Built-in | English and Arabic button assets |
 
 ```ts
-import { provideUaePass } from 'sensei-uaepass';
-
 provideUaePass({
-  clientId: '<CLIENT_ID>',
-  redirectUri: 'https://app.example.com/uae-pass/callback',
-  isProduction: false,
-  tokenProxyUrl: '/api/uae-pass/token',
-  userInfoProxyUrl: '/api/uae-pass/userinfo',
-})
+  loginUrl: 'https://bff.example.com/auth/uae-pass/login',
+  sessionUrl: 'https://bff.example.com/api/session',
+  logoutUrl: 'https://bff.example.com/auth/logout',
+  language: 'ar',
+  requestTimeoutMs: 10_000,
+});
 ```
+
+UAE PASS client IDs, secrets, provider endpoints, scopes, redirect URIs, PKCE, and
+tokens are BFF configuration and must not appear in Angular configuration.

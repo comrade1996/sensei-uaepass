@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-07-29
+
+### Breaking
+
+- Replace browser-managed OAuth with a server-owned BFF session architecture.
+- Replace `clientId`, redirect, environment, storage, token-proxy, and user-info
+  configuration with `loginUrl`, `sessionUrl`, and `logoutUrl`.
+- Remove the Angular callback component, public token signals, browser PKCE/state
+  storage, token persistence, and direct token/user-info methods.
+
+### Security
+
+- Keep all UAE PASS tokens and complete identity responses server-side.
+- Add one-time server transactions, session binding and rotation, fixed redirect URI,
+  CSRF-protected logout, strict cookies and headers, bounded upstream requests, and
+  metadata-only logging.
+- Require an explicit provider client-authentication method and a shared production
+  session store.
+- Add a threat model, data-minimization guidance, CodeQL, an SBOM release artifact,
+  signed-tag verification, and commit-pinned GitHub Actions.
+
+### Quality
+
+- Add BFF integration tests for PKCE, replay, session rotation, browser token
+  exclusion, CSRF, logout, safe logs, malformed upstream data, and production-store
+  enforcement.
+- Add CI jobs for Angular 19.2 minimum, latest Angular 19, Angular 20 minimum, and
+  latest Angular 20.
+
 ## [2.0.0] - 2026-07-27
 
 ### Changed
