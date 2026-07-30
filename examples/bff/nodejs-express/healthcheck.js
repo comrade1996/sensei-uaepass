@@ -1,20 +1,23 @@
-const http = require('node:http');
+const net = require('node:net');
 
-const request = http.get(
+const socket = net.connect(
   {
-    hostname: '127.0.0.1',
+    host: '127.0.0.1',
     port: Number(process.env.PORT || 3001),
-    path: '/health/live',
-    timeout: 2_000,
   },
-  (response) => {
-    response.resume();
-    process.exit(response.statusCode === 200 ? 0 : 1);
+  () => {
+    socket.write('GET /health/live HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n');
   }
 );
 
-request.on('error', () => process.exit(1));
-request.on('timeout', () => {
-  request.destroy();
+let statusCode = 0;
+socket.on('data', (chunk) => {
+  const match = /^HTTP\/1\.1 (\d{3})/.exec(chunk.toString());
+  if (match) statusCode = Number(match[1]);
+});
+socket.on('close', () => process.exit(statusCode === 200 ? 0 : 1));
+socket.on('error', () => process.exit(1));
+socket.setTimeout(2_000, () => {
+  socket.destroy();
   process.exit(1);
 });

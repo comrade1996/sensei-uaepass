@@ -162,7 +162,10 @@ export class UaePassAuthService {
 
       this.clearSessionState(UaePassAuthStatus.LoggedOut);
       if (response?.redirectUrl && typeof window !== 'undefined') {
-        window.location.assign(response.redirectUrl);
+        const safeUrl = this.sanitizeRedirectUrl(response.redirectUrl);
+        if (safeUrl) {
+          window.location.assign(safeUrl);
+        }
       }
     } catch (error) {
       this.clearSessionState(UaePassAuthStatus.Error);
@@ -183,6 +186,18 @@ export class UaePassAuthService {
 
   private requestTimeoutMs(): number {
     return this.config.requestTimeoutMs ?? 20_000;
+  }
+
+  private sanitizeRedirectUrl(url: string): string | null {
+    try {
+      const parsed = new URL(url, window.location.origin);
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+        return null;
+      }
+      return parsed.toString();
+    } catch {
+      return null;
+    }
   }
 
   private clearSessionState(status: UaePassAuthStatus): void {

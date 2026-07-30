@@ -137,6 +137,18 @@ function createApp({
     return true;
   }
 
+  async function csrfProtection(request, response, next) {
+    const sessionId = getSessionId(request);
+    const session = sessionId ? await store.get(sessionId) : null;
+    if (!session || !safeEqual(request.get('X-CSRF-Token'), session.csrfToken)) {
+      response.status(403).json({ error: 'csrf_rejected', correlationId: request.correlationId });
+      return;
+    }
+    request.sessionId = sessionId;
+    request.session = session;
+    next();
+  }
+
   app.get('/auth/uae-pass/login', createRateLimiter(10), async (request, response, next) => {
     try {
       let sessionId = getSessionId(request);
@@ -261,16 +273,10 @@ function createApp({
     }
   });
 
-  app.post('/auth/logout', createRateLimiter(20), async (request, response, next) => {
+  app.post('/auth/logout', createRateLimiter(20), csrfProtection, async (request, response, next) => {
     try {
       if (!requireAllowedOrigin(request, response)) return;
-      const sessionId = getSessionId(request);
-      const session = sessionId ? await store.get(sessionId) : null;
-      if (!session || !safeEqual(request.get('X-CSRF-Token'), session.csrfToken)) {
-        response.status(403).json({ error: 'csrf_rejected', correlationId: request.correlationId });
-        return;
-      }
-      await store.delete(sessionId);
+      await store.delete(request.sessionId);
       clearSessionCookie(response);
       const providerLogoutUrl = new URL(config.logoutUrl);
       providerLogoutUrl.searchParams.set('redirect_uri', config.logoutRedirectUri);
