@@ -1,0 +1,52 @@
+<svg width="1200" height="360" viewBox="0 0 1200 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title description">
+  <title id="title">Sensei UAE PASS for Angular</title>
+  <desc id="description">A BFF-first Angular session client for secure UAE PASS integrations.</desc>
+  <defs>
+    <linearGradient id="background" x1="80" y1="32" x2="1110" y2="350" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#071426"/>
+      <stop offset="0.55" stop-color="#102E51"/>
+      <stop offset="1" stop-color="#064E3B"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="128" y1="78" x2="310" y2="276" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="382" y1="0" x2="1070" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA"/>
+      <stop offset="0.5" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+    <filter id="shadow" x="61" y="44" width="315" height="282" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#E2E8F0" stroke-opacity="0.055"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="360" rx="28" fill="url(#background)"/>
+  <rect width="1200" height="360" rx="28" fill="url(#grid)"/>
+  <circle cx="1090" cy="38" r="210" fill="#2563EB" fill-opacity="0.08"/>
+  <circle cx="1160" cy="330" r="240" fill="#10B981" fill-opacity="0.08"/>
+
+  <g filter="url(#shadow)">
+    <path d="M218 64L326 103V178C326 247 282 292 218 316C154 292 110 247 110 178V103L218 64Z" fill="#0F172A" stroke="url(#shield)" stroke-width="5"/>
+    <path d="M218 91L297 120V178C297 226 268 261 218 282C168 261 139 226 139 178V120L218 91Z" fill="url(#shield)" fill-opacity="0.18"/>
+    <path d="M177 183L207 213L263 151" stroke="#F8FAFC" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="218" cy="184" r="80" stroke="#F8FAFC" stroke-opacity="0.12" stroke-width="2"/>
+  </g>
+
+  <rect x="382" y="81" width="118" height="34" rx="17" fill="#10B981" fill-opacity="0.17" stroke="#34D399" stroke-opacity="0.5"/>
+  <text x="441" y="103" text-anchor="middle" fill="#A7F3D0" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.2">VERSION 3</text>
+
+  <text x="382" y="174" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="750" letter-spacing="-1.5">Sensei UAE PASS</text>
+  <text x="382" y="222" fill="url(#accent)" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="600">Secure sessions for modern Angular</text>
+  <text x="382" y="267" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="20">BFF-first · token-safe browser boundary · Arabic &amp; RTL · Angular 19–20</text>
+
+  <g transform="translate(382 298)">
+    <rect width="98" height="4" rx="2" fill="#EF4444"/>
+    <rect x="98" width="98" height="4" fill="#F8FAFC"/>
+    <rect x="196" width="98" height="4" fill="#22C55E"/>
+    <rect x="294" width="44" height="4" rx="2" fill="#111827"/>
+  </g>
+</svg>
