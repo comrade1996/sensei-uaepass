@@ -46,6 +46,14 @@ jobs:
           tag_version="${GITHUB_REF_NAME#v}"
           test "$package_version" = "$tag_version"
 
+      - name: Configure SSH allowed signers for tag verification
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          echo "omirgibreel7@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILWbSfSOkhSURdLZnLgw6Py5/yBvQ8SLmtkmsH9EEe9b" > ~/.ssh/allowed_signers
+          git config --global gpg.format ssh
+          git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+
       - name: Verify signed release tag
         shell: bash
         run: |
