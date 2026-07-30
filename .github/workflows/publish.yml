@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
+          fetch-tags: true
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -46,7 +47,16 @@ jobs:
           test "$package_version" = "$tag_version"
 
       - name: Verify signed release tag
-        run: git verify-tag "${GITHUB_REF_NAME}"
+        shell: bash
+        run: |
+          git fetch --tags --force origin
+          if [ "$(git cat-file -t "${GITHUB_REF_NAME}" 2>/dev/null || true)" = "tag" ]; then
+            git verify-tag "${GITHUB_REF_NAME}"
+          else
+            echo "Tag '${GITHUB_REF_NAME}' is lightweight. git verify-tag requires an annotated, signed tag."
+            echo "Create one with: git tag -s ${GITHUB_REF_NAME} -m 'Release ${GITHUB_REF_NAME}' && git push origin ${GITHUB_REF_NAME} --force"
+            exit 1
+          fi
 
       - name: Run release quality gates
         run: npm run validate
