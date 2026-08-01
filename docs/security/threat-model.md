@@ -3,17 +3,47 @@
 ## Protected assets
 
 - UAE PASS client secret
-- authorization codes and PKCE verifiers when PKCE is enabled
-- access, refresh, and ID tokens
-- complete UAE PASS identity responses
-- application sessions and CSRF tokens
+- Authorization codes and PKCE verifiers when PKCE is enabled
+- Access, refresh, and ID tokens
+- Complete UAE PASS identity responses
+- Application sessions and CSRF tokens
 
 ## Trust boundaries
 
-1. Browser to application BFF
-2. BFF to UAE PASS
-3. BFF to shared session store
-4. Deployment and logging infrastructure
+```mermaid
+graph TB
+    subgraph Browser["Browser (Untrusted)"]
+        B1["Angular App"]
+        B2["JavaScript execution"]
+    end
+
+    subgraph BFF["BFF (Trusted Server)"]
+        S1["OAuth Transaction"]
+        S2["Token Storage"]
+        S3["Session Store"]
+        S4["CSRF Validation"]
+    end
+
+    subgraph UAE["UAE PASS (External Provider)"]
+        U1["Authorization Server"]
+        U2["User Info Endpoint"]
+    end
+
+    subgraph Infra["Infrastructure"]
+        I1["Logging"]
+        I2["Secrets Manager"]
+        I3["Session Store (Redis)"]
+    end
+
+    Browser -- "Boundary 1: HTTPS + Cookie" --> BFF
+    BFF -- "Boundary 2: HTTPS + Basic Auth" --> UAE
+    BFF -- "Boundary 3: Private network" --> Infra
+```
+
+1. **Browser to application BFF** — untrusted client, HTTPS, opaque cookie
+2. **BFF to UAE PASS** — server-to-server, HTTPS, HTTP Basic auth
+3. **BFF to shared session store** — private network, encrypted at rest
+4. **Deployment and logging infrastructure** — metadata-only logs
 
 ## Primary threats and controls
 
@@ -31,6 +61,38 @@
 | Stolen session cookie | Random opaque ID, `HttpOnly`, `Secure`, bounded TTL, store invalidation |
 | Upstream denial or malformed data | Timeouts, abort, size/type validation, fail-closed parsing |
 | Multi-instance inconsistency | Shared production session store |
+| Rate limit bypass | Per-endpoint rate limits (login: 10/15min, callback: 30/15min, session: 120/15min) |
+
+## Attack surface diagram
+
+```mermaid
+graph LR
+    subgraph Exposed["Exposed Endpoints"]
+        E1["GET /auth/uae-pass/login"]
+        E2["GET /auth/uae-pass/callback"]
+        E3["GET /api/session"]
+        E4["POST /auth/logout"]
+    end
+
+    subgraph Protected["Protected Assets"]
+        P1["Client Secret"]
+        P2["Tokens"]
+        P3["Session Store"]
+        P4["CSRF Tokens"]
+    end
+
+    subgraph Controls["Security Controls"]
+        C1["Rate Limiting"]
+        C2["State Validation"]
+        C3["Origin Allowlist"]
+        C4["CSRF Check"]
+        C5["Cookie Policy"]
+        C6["Input Validation"]
+    end
+
+    Exposed --> Controls
+    Controls --> Protected
+```
 
 ## Residual risks
 
