@@ -35,7 +35,7 @@ OAuth transactions, tokens, identity validation, and logout.
 > 🤖 **AI-friendly package** — includes a complete [AI Agent Guide](docs/ai-agent-guide.md) with the full
 > API surface, BFF contract, integration patterns, and gotchas so any AI coding assistant can integrate
 > this package correctly — even with a non-Node.js backend.
-
+>
 > ⚠️ This community package is designed with reference to published UAE PASS
 > documentation. It is **not** certified, approved, or endorsed by UAE PASS. Each
 > service provider must complete its own onboarding and security approval.

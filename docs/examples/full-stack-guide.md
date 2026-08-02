@@ -280,6 +280,7 @@ npm run start:full
 ```
 
 This starts:
+
 - **Angular** on `http://localhost:4200`
 - **BFF** on `http://localhost:3001`
 
@@ -445,7 +446,7 @@ REDIS_URL=redis://your-redis-host:6379
 
 ### CORS errors in browser console
 
-```
+```text
 Access to fetch at 'http://localhost:3001/api/session' from origin 'http://localhost:4200'
 has been blocked by CORS policy
 ```

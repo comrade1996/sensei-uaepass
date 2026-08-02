@@ -54,6 +54,7 @@ will find no session and set status to `Idle`.
 ## Can I deploy Angular and the BFF on different origins?
 
 Yes, but you must configure:
+
 - An exact origin allowlist (`ALLOWED_ORIGINS`)
 - Credentialed CORS
 - Cookie `SameSite` and `Secure` attributes matching the topology

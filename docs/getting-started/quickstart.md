@@ -30,6 +30,7 @@ export const appConfig = {
 
 > If your BFF runs on a different origin (e.g. `http://localhost:3001` during development),
 > use absolute URLs:
+>
 > ```ts
 > provideUaePass({
 >   loginUrl: 'http://localhost:3001/auth/uae-pass/login',

@@ -12,6 +12,7 @@ npm run start:full
 ```
 
 This starts:
+
 - Angular dev server on `http://localhost:4200`
 - BFF server on `http://localhost:3001`
 

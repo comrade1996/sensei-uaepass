@@ -67,6 +67,7 @@ auth.login('/dashboard');
 ```
 
 The `returnPath` is validated:
+
 - Must start with `/`
 - Must not start with `//`
 - Must not contain `\`

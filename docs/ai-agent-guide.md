@@ -7,6 +7,7 @@
 ## TL;DR for AI Agents
 
 `sensei-uaepass` is an **Angular library** (not a backend). It provides:
+
 - A login button component (`UaePassLoginButtonComponent`)
 - An auth service with signals (`UaePassAuthService`)
 - A config provider (`provideUaePass`)
@@ -84,6 +85,7 @@ provideUaePass({
 ```
 
 **Validation rules:**
+
 - `loginUrl`, `sessionUrl`, `logoutUrl` are required, must be non-empty
 - `javascript:` URLs are rejected
 - `language` must be `'en'` or `'ar'`
@@ -232,10 +234,12 @@ implements this contract.
 ### Endpoint 1: `GET {loginUrl}`
 
 **Query params received from Angular:**
+
 - `returnTo` — local path to return to after login (e.g. `/dashboard`)
 - `ui_locales` — `en` or `ar`
 
 **What the BFF must do:**
+
 1. Generate random `state` string
 2. Optionally generate PKCE verifier + S256 challenge (if enabled)
 3. Store transaction: `{ state, verifier?, returnTo, createdAt }` in server session
@@ -251,13 +255,16 @@ implements this contract.
 ### Endpoint 2: `GET {loginUrl}/callback` (or wherever registered)
 
 **Query params from UAE PASS:**
+
 - `code` — authorization code
 - `state` — must match stored transaction
 
 **Or on cancellation:**
+
 - `error` — error code
 
 **What the BFF must do:**
+
 1. Read session cookie → get stored transaction
 2. Validate `state` matches, not expired (5 min), not already consumed
 3. Delete transaction (one-time-use)
@@ -275,13 +282,17 @@ implements this contract.
 **Request:** GET with session cookie, `Origin` header
 
 **What the BFF must do:**
+
 1. Read session cookie → get session from store
 2. Check `tokenExpiresAt` > now
 3. If no session or expired → delete session, clear cookie, return:
+
    ```json
    { "authenticated": false, "profile": null }
    ```
+
 4. If valid → return:
+
    ```json
    {
      "authenticated": true,
@@ -294,6 +305,7 @@ implements this contract.
 `Access-Control-Allow-Credentials: true`. Never use `*` with credentials.
 
 **Angular validates the response:**
+
 - `authenticated` must be `boolean`
 - If `authenticated === true`: `profile.sub` must be non-empty string, `csrfToken` must be non-empty string
 - If `authenticated === false`: `profile` must be `null` or `undefined`
@@ -304,12 +316,14 @@ implements this contract.
 **Request:** POST with session cookie, `X-CSRF-Token` header, `Origin` header
 
 **What the BFF must do:**
+
 1. Validate `Origin` is in allowlist → else `403 { error: "origin_rejected" }`
 2. Validate `X-CSRF-Token` matches session → else `403 { error: "csrf_rejected" }`
 3. Delete session from store
 4. Clear session cookie
 5. Build UAE PASS logout URL: `{logoutUrl}?redirect_uri={registered logout redirect}`
 6. Return:
+
    ```json
    { "loggedOut": true, "redirectUrl": "https://stg-id.uaepass.ae/idshub/logout?redirect_uri=..." }
    ```
@@ -334,12 +348,14 @@ provider session.
 | Logout | `GET` | `/idshub/logout` |
 
 **Token endpoint specifics:**
+
 - Client auth: HTTP Basic (`client_id:client_secret` base64)
 - Params in query string: `grant_type=authorization_code`, `code`, `redirect_uri`
 - Content-Type: `multipart/form-data; charset=UTF-8`
 - If PKCE: add `code_verifier` to query
 
 **User info endpoint specifics:**
+
 - Auth: `Bearer {access_token}`
 - Content-Type: `application/x-www-form-urlencoded`
 

@@ -8,6 +8,7 @@ The callback state is missing, expired, already consumed, or not bound to the
 initiating session. Start a new login.
 
 **Causes:**
+
 - Session cookie was cleared between login initiation and callback
 - Transaction expired (default 5 minutes)
 - Callback was replayed (transaction is one-time-use)
@@ -18,6 +19,7 @@ The provider response lacks a usable bearer token. Confirm the environment and
 client-authentication contract.
 
 **Check:**
+
 - `UAE_PASS_ENVIRONMENT` is `staging` or `production`
 - `UAE_PASS_CLIENT_ID` and `UAE_PASS_CLIENT_SECRET` are correct
 - Token endpoint URL matches the environment
@@ -41,6 +43,7 @@ The user info response has no `sub` field or it is empty. This is a required fie
 ### `origin_rejected` or `csrf_rejected`
 
 Confirm:
+
 - The exact Angular origin is in `ALLOWED_ORIGINS`
 - Credentialed requests include `credentials: 'include'`
 - The `X-CSRF-Token` header matches the token from `/api/session`
