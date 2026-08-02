@@ -215,13 +215,13 @@ graph TB
 
 ### What the Browser Never Sees
 
-| Asset | Location |
-| --- | --- |
-| Access / refresh / ID tokens | BFF server session only |
-| UAE PASS client secret | BFF environment variables |
-| Complete identity profile | BFF minimizes before sending |
-| Authorization code | Consumed by BFF callback |
-| PKCE verifier | BFF server session only |
+| Asset                        | Location                     |
+| ---------------------------- | ---------------------------- |
+| Access / refresh / ID tokens | BFF server session only      |
+| UAE PASS client secret       | BFF environment variables    |
+| Complete identity profile    | BFF minimizes before sending |
+| Authorization code           | Consumed by BFF callback     |
+| PKCE verifier                | BFF server session only      |
 
 ---
 
@@ -233,11 +233,11 @@ npm install sensei-uaepass
 
 ### Peer Dependencies
 
-| Package | Version |
-| --- | --- |
-| `@angular/core` | `>=19.2.0 <21.0.0` |
+| Package           | Version            |
+| ----------------- | ------------------ |
+| `@angular/core`   | `>=19.2.0 <21.0.0` |
 | `@angular/common` | `>=19.2.0 <21.0.0` |
-| `rxjs` | `7.8.x` |
+| `rxjs`            | `7.8.x`            |
 
 ---
 
@@ -311,17 +311,17 @@ export class LoginComponent {}
 
 ### Inputs
 
-| Input | Type | Default | Description |
-| --- | --- | --- | --- |
-| `language` | `'en' \| 'ar'` | Config `language` or `'en'` | Button language and logo |
-| `customImageSrc` | `string \| null` | `null` | Override the button image |
-| `customStyles` | `string` | `''` | Inline styles on the image |
-| `isDisabled` | `boolean` | `false` | Manually disable the button |
+| Input            | Type             | Default                     | Description                 |
+| ---------------- | ---------------- | --------------------------- | --------------------------- |
+| `language`       | `'en' \| 'ar'`   | Config `language` or `'en'` | Button language and logo    |
+| `customImageSrc` | `string \| null` | `null`                      | Override the button image   |
+| `customStyles`   | `string`         | `''`                        | Inline styles on the image  |
+| `isDisabled`     | `boolean`        | `false`                     | Manually disable the button |
 
 ### Outputs
 
-| Output | Type | Description |
-| --- | --- | --- |
+| Output    | Type   | Description                             |
+| --------- | ------ | --------------------------------------- |
 | `pressed` | `void` | Emitted before `auth.login()` is called |
 
 The button is automatically disabled while the service is in `Authorizing`,
@@ -358,25 +358,25 @@ export class SessionComponent {
 
 ### Signal Reference
 
-| Signal | Type | Description |
-| --- | --- | --- |
-| `status` | `Signal<UaePassAuthStatus>` | Session lifecycle status |
-| `profile` | `Signal<UaePassUserProfile \| null>` | Minimized BFF profile |
-| `isAuthenticated` | `Signal<boolean>` | `true` only when status is `Authenticated` and profile has valid `sub` |
-| `error` | `Signal<string \| null>` | Human-readable error message |
-| `errorCode` | `Signal<UaePassErrorCode \| null>` | Typed error code |
+| Signal            | Type                                 | Description                                                            |
+| ----------------- | ------------------------------------ | ---------------------------------------------------------------------- |
+| `status`          | `Signal<UaePassAuthStatus>`          | Session lifecycle status                                               |
+| `profile`         | `Signal<UaePassUserProfile \| null>` | Minimized BFF profile                                                  |
+| `isAuthenticated` | `Signal<boolean>`                    | `true` only when status is `Authenticated` and profile has valid `sub` |
+| `error`           | `Signal<string \| null>`             | Human-readable error message                                           |
+| `errorCode`       | `Signal<UaePassErrorCode \| null>`   | Typed error code                                                       |
 
 ### `UaePassAuthStatus` Enum
 
-| Value | Description |
-| --- | --- |
-| `Idle` | Initial state or after session restoration finds no session |
-| `LoadingSession` | Restoring session from BFF |
-| `Authorizing` | Redirecting to BFF login |
-| `Authenticated` | Valid session with profile |
-| `LoggingOut` | Calling BFF logout |
-| `Error` | An operation failed |
-| `LoggedOut` | Session ended successfully |
+| Value            | Description                                                 |
+| ---------------- | ----------------------------------------------------------- |
+| `Idle`           | Initial state or after session restoration finds no session |
+| `LoadingSession` | Restoring session from BFF                                  |
+| `Authorizing`    | Redirecting to BFF login                                    |
+| `Authenticated`  | Valid session with profile                                  |
+| `LoggingOut`     | Calling BFF logout                                          |
+| `Error`          | An operation failed                                         |
+| `LoggedOut`      | Session ended successfully                                  |
 
 ### `UaePassUserProfile` Interface
 
@@ -465,6 +465,7 @@ async signOut(): Promise<void> {
 ```
 
 Logout requires:
+
 - An allowed origin (exact match from `ALLOWED_ORIGINS`)
 - The in-memory CSRF token obtained from `/api/session`
 
@@ -498,15 +499,15 @@ to control the provider's login page language.
 
 ### Localized texts
 
-| Language | Button text |
-| --- | --- |
-| English | "Sign in with UAE PASS" |
-| Arabic | "تسجيل الدخول بالهوية الرقمية" |
+| Language | Button text                    |
+| -------- | ------------------------------ |
+| English  | "Sign in with UAE PASS"        |
+| Arabic   | "تسجيل الدخول بالهوية الرقمية" |
 
 For RTL layout, set `dir="rtl"` on your app container:
 
 ```html
-<html dir="rtl" lang="ar">
+<html dir="rtl" lang="ar"></html>
 ```
 
 ---
@@ -517,37 +518,37 @@ The reference BFF is at [`examples/bff/nodejs-express`](examples/bff/nodejs-expr
 
 ### BFF Endpoints
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| `GET` | `/auth/uae-pass/login` | Start login, redirect to UAE PASS |
-| `GET` | `/auth/uae-pass/callback` | Receive OAuth callback, exchange code |
-| `GET` | `/api/session` | Return minimized session profile |
-| `POST` | `/auth/logout` | CSRF-protected session invalidation |
-| `GET` | `/health/live` | Liveness probe |
-| `GET` | `/health/ready` | Readiness probe |
+| Method | Path                      | Purpose                               |
+| ------ | ------------------------- | ------------------------------------- |
+| `GET`  | `/auth/uae-pass/login`    | Start login, redirect to UAE PASS     |
+| `GET`  | `/auth/uae-pass/callback` | Receive OAuth callback, exchange code |
+| `GET`  | `/api/session`            | Return minimized session profile      |
+| `POST` | `/auth/logout`            | CSRF-protected session invalidation   |
+| `GET`  | `/health/live`            | Liveness probe                        |
+| `GET`  | `/health/ready`           | Readiness probe                       |
 
 ### BFF Environment Variables
 
-| Variable | Required | Default | Description |
-| --- | --- | --- | --- |
-| `NODE_ENV` | No | `development` | Node environment |
-| `PORT` | No | `3001` | BFF listen port |
-| `APP_ORIGIN` | Yes | — | Angular app origin (e.g. `http://localhost:4200`) |
-| `ALLOWED_ORIGINS` | No | `APP_ORIGIN` | Comma-separated allowed origins for CORS |
-| `UAE_PASS_ENVIRONMENT` | Yes | — | `staging` or `production` |
-| `UAE_PASS_CLIENT_ID` | Yes | — | UAE PASS client ID from onboarding |
-| `UAE_PASS_CLIENT_SECRET` | Yes | — | UAE PASS client secret |
-| `UAE_PASS_REDIRECT_URI` | Yes | — | Must end with `/auth/uae-pass/callback` |
-| `UAE_PASS_LOGOUT_REDIRECT_URI` | Yes | — | Post-logout redirect URL |
-| `UAE_PASS_SCOPE` | No | `urn:uae:digitalid:profile:general` | OAuth scope |
-| `UAE_PASS_PKCE_ENABLED` | No | `false` | Enable S256 PKCE (confirm with onboarding) |
-| `SESSION_COOKIE_NAME` | No | `uaepass_session` | Session cookie name |
-| `SESSION_COOKIE_SECURE` | No | `true` in production | Cookie `Secure` flag |
-| `SESSION_COOKIE_SAME_SITE` | No | `Lax` | Cookie `SameSite` policy |
-| `SESSION_TTL_MS` | No | `28800000` (8h) | Session TTL in milliseconds |
-| `TRANSACTION_TTL_MS` | No | `300000` (5min) | OAuth transaction TTL |
-| `UPSTREAM_TIMEOUT_MS` | No | `10000` | UAE PASS request timeout |
-| `SESSION_STORE_MODULE` | Prod only | — | Path to shared session store module |
+| Variable                       | Required  | Default                             | Description                                       |
+| ------------------------------ | --------- | ----------------------------------- | ------------------------------------------------- |
+| `NODE_ENV`                     | No        | `development`                       | Node environment                                  |
+| `PORT`                         | No        | `3001`                              | BFF listen port                                   |
+| `APP_ORIGIN`                   | Yes       | —                                   | Angular app origin (e.g. `http://localhost:4200`) |
+| `ALLOWED_ORIGINS`              | No        | `APP_ORIGIN`                        | Comma-separated allowed origins for CORS          |
+| `UAE_PASS_ENVIRONMENT`         | Yes       | —                                   | `staging` or `production`                         |
+| `UAE_PASS_CLIENT_ID`           | Yes       | —                                   | UAE PASS client ID from onboarding                |
+| `UAE_PASS_CLIENT_SECRET`       | Yes       | —                                   | UAE PASS client secret                            |
+| `UAE_PASS_REDIRECT_URI`        | Yes       | —                                   | Must end with `/auth/uae-pass/callback`           |
+| `UAE_PASS_LOGOUT_REDIRECT_URI` | Yes       | —                                   | Post-logout redirect URL                          |
+| `UAE_PASS_SCOPE`               | No        | `urn:uae:digitalid:profile:general` | OAuth scope                                       |
+| `UAE_PASS_PKCE_ENABLED`        | No        | `false`                             | Enable S256 PKCE (confirm with onboarding)        |
+| `SESSION_COOKIE_NAME`          | No        | `uaepass_session`                   | Session cookie name                               |
+| `SESSION_COOKIE_SECURE`        | No        | `true` in production                | Cookie `Secure` flag                              |
+| `SESSION_COOKIE_SAME_SITE`     | No        | `Lax`                               | Cookie `SameSite` policy                          |
+| `SESSION_TTL_MS`               | No        | `28800000` (8h)                     | Session TTL in milliseconds                       |
+| `TRANSACTION_TTL_MS`           | No        | `300000` (5min)                     | OAuth transaction TTL                             |
+| `UPSTREAM_TIMEOUT_MS`          | No        | `10000`                             | UAE PASS request timeout                          |
+| `SESSION_STORE_MODULE`         | Prod only | —                                   | Path to shared session store module               |
 
 ### Local development
 
@@ -585,17 +586,17 @@ SESSION_STORE_MODULE=./stores/redis-store.js
 
 ### UAE PASS provider endpoints
 
-| Environment | Base URL |
-| --- | --- |
-| Staging | `https://stg-id.uaepass.ae` |
-| Production | `https://id.uaepass.ae` |
+| Environment | Base URL                    |
+| ----------- | --------------------------- |
+| Staging     | `https://stg-id.uaepass.ae` |
+| Production  | `https://id.uaepass.ae`     |
 
-| Endpoint | Path |
-| --- | --- |
+| Endpoint      | Path                    |
+| ------------- | ----------------------- |
 | Authorization | `GET /idshub/authorize` |
-| Token | `POST /idshub/token` |
-| User info | `GET /idshub/userinfo` |
-| Logout | `GET /idshub/logout` |
+| Token         | `POST /idshub/token`    |
+| User info     | `GET /idshub/userinfo`  |
+| Logout        | `GET /idshub/logout`    |
 
 ---
 
@@ -603,16 +604,16 @@ SESSION_STORE_MODULE=./stores/redis-store.js
 
 ### `UaePassConfig`
 
-| Field | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `loginUrl` | `string` | Yes | — | BFF endpoint that starts login |
-| `sessionUrl` | `string` | Yes | — | BFF endpoint that returns the session |
-| `logoutUrl` | `string` | Yes | — | BFF endpoint for CSRF-protected logout |
-| `language` | `'en' \| 'ar'` | No | `'en'` | Login button language |
-| `requestTimeoutMs` | `number` | No | `20000` | Session/logout request timeout |
-| `autoRestoreSession` | `boolean` | No | `true` | Auto-restore session on service init |
-| `buttonLogos.english` | `string` | No | Built-in | English button image path |
-| `buttonLogos.arabic` | `string` | No | Built-in | Arabic button image path |
+| Field                 | Type           | Required | Default  | Description                            |
+| --------------------- | -------------- | -------- | -------- | -------------------------------------- |
+| `loginUrl`            | `string`       | Yes      | —        | BFF endpoint that starts login         |
+| `sessionUrl`          | `string`       | Yes      | —        | BFF endpoint that returns the session  |
+| `logoutUrl`           | `string`       | Yes      | —        | BFF endpoint for CSRF-protected logout |
+| `language`            | `'en' \| 'ar'` | No       | `'en'`   | Login button language                  |
+| `requestTimeoutMs`    | `number`       | No       | `20000`  | Session/logout request timeout         |
+| `autoRestoreSession`  | `boolean`      | No       | `true`   | Auto-restore session on service init   |
+| `buttonLogos.english` | `string`       | No       | Built-in | English button image path              |
+| `buttonLogos.arabic`  | `string`       | No       | Built-in | Arabic button image path               |
 
 > UAE PASS client IDs, secrets, provider endpoints, scopes, redirect URIs, PKCE, and
 > tokens are **BFF configuration** and must not appear in Angular configuration.
@@ -631,22 +632,22 @@ Injectable service (`providedIn: 'root'`) that manages authentication state via 
 
 #### Signals
 
-| Signal | Type | Description |
-| --- | --- | --- |
-| `status` | `Signal<UaePassAuthStatus>` | Current auth lifecycle status |
-| `profile` | `Signal<UaePassUserProfile \| null>` | Minimized profile from BFF |
-| `isAuthenticated` | `Signal<boolean>` | True only for validated session |
-| `error` | `Signal<string \| null>` | Error message |
-| `errorCode` | `Signal<UaePassErrorCode \| null>` | Typed error code |
+| Signal            | Type                                 | Description                     |
+| ----------------- | ------------------------------------ | ------------------------------- |
+| `status`          | `Signal<UaePassAuthStatus>`          | Current auth lifecycle status   |
+| `profile`         | `Signal<UaePassUserProfile \| null>` | Minimized profile from BFF      |
+| `isAuthenticated` | `Signal<boolean>`                    | True only for validated session |
+| `error`           | `Signal<string \| null>`             | Error message                   |
+| `errorCode`       | `Signal<UaePassErrorCode \| null>`   | Typed error code                |
 
 #### Methods
 
-| Method | Returns | Description |
-| --- | --- | --- |
-| `login(returnPath?: string)` | `void` | Redirects browser to BFF login |
-| `restoreSession()` | `Promise<boolean>` | Fetches session from BFF; auto-called on init |
-| `logout()` | `Promise<void>` | CSRF-protected logout via BFF |
-| `resetError()` | `void` | Clears error state |
+| Method                       | Returns            | Description                                   |
+| ---------------------------- | ------------------ | --------------------------------------------- |
+| `login(returnPath?: string)` | `void`             | Redirects browser to BFF login                |
+| `restoreSession()`           | `Promise<boolean>` | Fetches session from BFF; auto-called on init |
+| `logout()`                   | `Promise<void>`    | CSRF-protected logout via BFF                 |
+| `resetError()`               | `void`             | Clears error state                            |
 
 ### `UaePassLoginButtonComponent`
 
@@ -658,14 +659,14 @@ Custom error class with `code: UaePassErrorCode` and optional `originalError`.
 
 ### `UaePassErrorCode` Enum
 
-| Code | Description |
-| --- | --- |
-| `invalid_configuration` | Config validation failed |
-| `redirect_unavailable` | `window.location` not available |
-| `session_fetch_failed` | BFF session request failed or timed out |
-| `invalid_session_response` | Malformed BFF response |
-| `authorization_failed` | Login redirect failed |
-| `logout_failed` | Logout request failed |
+| Code                       | Description                             |
+| -------------------------- | --------------------------------------- |
+| `invalid_configuration`    | Config validation failed                |
+| `redirect_unavailable`     | `window.location` not available         |
+| `session_fetch_failed`     | BFF session request failed or timed out |
+| `invalid_session_response` | Malformed BFF response                  |
+| `authorization_failed`     | Login redirect failed                   |
+| `logout_failed`            | Logout request failed                   |
 
 ---
 
@@ -679,7 +680,8 @@ import { UaePassAuthService, UaePassErrorCode } from 'sensei-uaepass';
   template: `
     @if (auth.error(); as err) {
       <div class="alert alert-danger">
-        <strong>{{ auth.errorCode() }}</strong>: {{ err }}
+        <strong>{{ auth.errorCode() }}</strong
+        >: {{ err }}
         <button (click)="auth.resetError()">Dismiss</button>
       </div>
     }
@@ -764,11 +766,11 @@ npm run start:full
 
 ### Compatibility
 
-| Sensei UAE PASS | Angular | RxJS | Node.js |
-| --- | --- | --- | --- |
-| 3.x | 19.2–20.x | 7.8.x | 22.12+, 24.x |
-| 2.x | 19.2–20.x | 7.8.x | 22.12+, 24.x |
-| 1.x | 19.x | 7.8.x | Angular 19 supported |
+| Sensei UAE PASS | Angular   | RxJS  | Node.js              |
+| --------------- | --------- | ----- | -------------------- |
+| 3.x             | 19.2–20.x | 7.8.x | 22.12+, 24.x         |
+| 2.x             | 19.2–20.x | 7.8.x | 22.12+, 24.x         |
+| 1.x             | 19.x      | 7.8.x | Angular 19 supported |
 
 ---
 
