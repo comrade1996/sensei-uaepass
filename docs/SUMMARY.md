@@ -1,6 +1,7 @@
-# Summary
+# Table of Contents
 
 - [Introduction](README.md)
+- [AI Agent Guide](ai-agent-guide.md)
 - Getting Started
   - [Installation](getting-started/installation.md)
   - [Quickstart](getting-started/quickstart.md)
@@ -12,6 +13,9 @@
   - [Language and Logos](configuration/language-and-logos.md)
 - Components
   - [Login Button](components/login-button.md)
+- Services
+  - [Authentication Service](services/auth-service.md)
+  - [Error Handling](services/error-handling.md)
 - Authentication and Security
   - [BFF Architecture](security/bff-architecture.md)
   - [UAE PASS Web Contract](security/uae-pass-contract.md)
@@ -20,17 +24,17 @@
   - [Data Minimization](security/data-minimization.md)
 - Architecture Decisions
   - [ADR 001: BFF Security Boundary](architecture/adr-001-bff-security-boundary.md)
-- Services
-  - [Authentication Service](services/auth-service.md)
 - Examples
+  - [Full-Stack Step-by-Step Guide](examples/full-stack-guide.md)
   - [Angular Demo](examples/angular-demo.md)
   - [Node.js/Express BFF](examples/node-bff.md)
+  - [BFF Endpoints Reference](examples/bff-endpoints.md)
 - Troubleshooting
   - [FAQ](troubleshooting/faq.md)
   - [Common Errors](troubleshooting/common-errors.md)
   - [Authentication and Session Errors](troubleshooting/authentication-errors.md)
 - Deployment
-  - [Publishing to GitBook](deployment/publishing-to-gitbook.md)
   - [Production Checklist](deployment/production-checklist.md)
+  - [Publishing to GitBook](deployment/publishing-to-gitbook.md)
 - Roadmap
   - [Security and Production Readiness](roadmap/security-and-production-readiness.md)

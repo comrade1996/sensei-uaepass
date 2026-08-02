@@ -3,7 +3,24 @@
 The reference BFF was checked against the published UAE PASS Web Integration
 documentation on July 30, 2026.
 
-## Confirmed Contract
+## OAuth flow overview
+
+```mermaid
+sequenceDiagram
+    participant BFF as BFF
+    participant UAE as UAE PASS
+
+    BFF->>UAE: GET /idshub/authorize?response_type=code&client_id=...&state=...&redirect_uri=...&scope=...&acr_values=...&ui_locales=en
+    UAE->>UAE: User authenticates
+    UAE->>BFF: 302 redirect_uri?code=...&state=...
+    BFF->>UAE: POST /idshub/token (HTTP Basic, query params, multipart/form-data)
+    UAE->>BFF: { access_token, expires_in, token_type: "bearer" }
+    BFF->>UAE: GET /idshub/userinfo (Bearer token, x-www-form-urlencoded)
+    UAE->>BFF: { sub, fullnameEN, fullnameAR, ... }
+    BFF->>UAE: GET /idshub/logout?redirect_uri=... (on logout)
+```
+
+## Confirmed contract
 
 | Concern | Published UAE PASS requirement |
 | --- | --- |
@@ -25,6 +42,40 @@ The UAE PASS Authentication APIs Postman Collection V2 supplied with the integra
 materials confirms the token query parameters, Basic authentication, empty multipart
 body, and bearer-authenticated user-info request.
 
+## Provider endpoints
+
+| Environment | Base URL |
+| --- | --- |
+| Staging | `https://stg-id.uaepass.ae` |
+| Production | `https://id.uaepass.ae` |
+
+| Endpoint | Method | Path |
+| --- | --- | --- |
+| Authorization | `GET` | `/idshub/authorize` |
+| Token | `POST` | `/idshub/token` |
+| User info | `GET` | `/idshub/userinfo` |
+| Logout | `GET` | `/idshub/logout` |
+
+## Token request example
+
+```http
+POST /idshub/token?grant_type=authorization_code&code=...&redirect_uri=...&code_verifier=... HTTP/1.1
+Host: stg-id.uaepass.ae
+Authorization: Basic <base64(clientId:clientSecret)>
+Content-Type: multipart/form-data; charset=UTF-8
+Accept: application/json
+```
+
+## User info request example
+
+```http
+GET /idshub/userinfo HTTP/1.1
+Host: stg-id.uaepass.ae
+Authorization: Bearer <access_token>
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+```
+
 ## PKCE
 
 The published UAE PASS web contract does not list `code_challenge`,
@@ -36,7 +87,18 @@ This is a provider-compatibility decision, not permission to weaken transaction
 handling. State remains cryptographically random, session-bound, short-lived, and
 single-use.
 
-## Onboarding-Specific Values
+### PKCE flow when enabled
+
+```mermaid
+flowchart LR
+    A["BFF generates verifier"] --> B["BFF computes S256 challenge"]
+    B --> C["BFF sends challenge to /authorize"]
+    C --> D["UAE PASS returns code"]
+    D --> E["BFF sends verifier to /token"]
+    E --> F["UAE PASS validates challenge"]
+```
+
+## Onboarding-specific values
 
 Public documentation cannot confirm values assigned to an individual service
 provider. Before staging or production, obtain and test:
@@ -48,7 +110,7 @@ provider. Before staging or production, obtain and test:
 - whether S256 PKCE is enabled for the client;
 - any network, certificate, or allowlisting requirements.
 
-## Official Sources
+## Official sources
 
 - [Web endpoints](https://docs.uaepass.ae/feature-guides/authentication/web-application/endpoints)
 - [Authorization code](https://docs.uaepass.ae/feature-guides/authentication/web-application/1.-obtaining-the-oauth2-access-code)
