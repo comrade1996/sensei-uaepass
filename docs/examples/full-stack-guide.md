@@ -42,7 +42,7 @@ graph LR
 | --- | --- |
 | Node.js | `>=22.12` |
 | npm | `>=10` |
-| Angular CLI | `>=19.2` (optional, use `ng` commands) |
+| Angular CLI | `>=17.3` (optional, use `ng` commands) |
 | UAE PASS staging credentials | Client ID + Secret from onboarding |
 
 ---

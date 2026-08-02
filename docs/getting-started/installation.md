@@ -22,8 +22,8 @@ pnpm add sensei-uaepass
 
 | Package | Version |
 | --- | --- |
-| `@angular/core` | `>=19.2.0 <21.0.0` |
-| `@angular/common` | `>=19.2.0 <21.0.0` |
+| `@angular/core` | `>=17.3.0 <21.0.0` |
+| `@angular/common` | `>=17.3.0 <21.0.0` |
 | `rxjs` | `7.8.x` |
 
 Angular is declared as a peer dependency so your application controls the version.

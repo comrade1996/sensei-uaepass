@@ -23,7 +23,7 @@ implements the correct contract.
 | Field | Value |
 | --- | --- |
 | npm package | `sensei-uaepass` |
-| Angular peer | `>=19.2.0 <21.0.0` |
+| Angular peer | `>=17.3.0 <21.0.0` |
 | RxJS peer | `7.8.x` |
 | Node.js (for BFF) | `>=22.12` |
 | License | MIT |

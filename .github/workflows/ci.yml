@@ -86,6 +86,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - label: Angular 17.3 minimum
+            angular: 17.3.0
+          - label: Latest Angular 17
+            angular: ^17.3.0
+          - label: Angular 18 minimum
+            angular: 18.0.0
+          - label: Latest Angular 18
+            angular: ^18.0.0
           - label: Angular 19.2 minimum
             angular: 19.2.0
           - label: Latest Angular 19

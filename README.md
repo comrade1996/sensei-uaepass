@@ -8,7 +8,7 @@
   <a href="https://www.npmjs.com/package/sensei-uaepass"><img src="https://img.shields.io/npm/v/sensei-uaepass.svg?style=flat-square" alt="npm version" /></a>
   <a href="https://www.npmjs.com/package/sensei-uaepass"><img src="https://img.shields.io/npm/dm/sensei-uaepass.svg?style=flat-square" alt="npm downloads" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/npm/l/sensei-uaepass.svg?style=flat-square" alt="license" /></a>
-  <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-19.2%E2%80%9320-dd0031?style=flat-square&logo=angular&logoColor=white" alt="Angular" /></a>
+  <a href="https://angular.dev"><img src="https://img.shields.io/badge/Angular-17.3%E2%80%9320-dd0031?style=flat-square&logo=angular&logoColor=white" alt="Angular" /></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-%3E%3D22.12-339933?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" /></a>
   <a href="https://rxjs.dev"><img src="https://img.shields.io/badge/RxJS-7.8-b7178c?style=flat-square&logo=reactivex&logoColor=white" alt="RxJS" /></a>
@@ -235,8 +235,8 @@ npm install sensei-uaepass
 
 | Package           | Version            |
 | ----------------- | ------------------ |
-| `@angular/core`   | `>=19.2.0 <21.0.0` |
-| `@angular/common` | `>=19.2.0 <21.0.0` |
+| `@angular/core`   | `>=17.3.0 <21.0.0` |
+| `@angular/common` | `>=17.3.0 <21.0.0` |
 | `rxjs`            | `7.8.x`            |
 
 ---
@@ -768,7 +768,7 @@ npm run start:full
 
 | Sensei UAE PASS | Angular   | RxJS  | Node.js              |
 | --------------- | --------- | ----- | -------------------- |
-| 3.x             | 19.2–20.x | 7.8.x | 22.12+, 24.x         |
+| 3.x             | 17.3–20.x | 7.8.x | 22.12+, 24.x         |
 | 2.x             | 19.2–20.x | 7.8.x | 22.12+, 24.x         |
 | 1.x             | 19.x      | 7.8.x | Angular 19 supported |
 

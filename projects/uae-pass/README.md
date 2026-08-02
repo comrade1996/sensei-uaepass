@@ -1,6 +1,6 @@
 # sensei-uaepass
 
-BFF-first UAE PASS session integration for Angular 19.2–20.
+BFF-first UAE PASS session integration for Angular 17.3–20.
 
 The package intentionally does not perform OAuth token exchange in the browser and
 does not expose UAE PASS tokens. Configure the three application BFF endpoints:

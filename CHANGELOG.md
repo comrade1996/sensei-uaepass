@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Lower the Angular peer dependency floor to `>=17.3.0 <21.0.0` to widen adoption.
+  The library relies on `input()`/`output()` signal APIs, so Angular 17.3 is the
+  minimum supported version.
+- Add CI compatibility jobs for Angular 17.3 minimum, latest Angular 17, Angular 18
+  minimum, and latest Angular 18 (in addition to the existing 19 and 20 jobs).
+
 ## [3.0.0] - 2026-07-29
 
 ### Breaking
